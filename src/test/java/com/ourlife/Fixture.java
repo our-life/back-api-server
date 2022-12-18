@@ -1,5 +1,6 @@
 package com.ourlife;
 
+import com.ourlife.dto.user.SignupRequest;
 import com.ourlife.entity.User;
 
 import java.time.LocalDate;
@@ -14,6 +15,16 @@ public class Fixture {
                 .profileImgUrl("테스트url")
                 .password("testPassword")
                 .birth(LocalDate.now())
+                .build();
+    }
+
+    public static SignupRequest signupRequest() {
+        return SignupRequest.builder()
+                .password("1234")
+                .nickname("test")
+                .email("test@test.com")
+                .birth(LocalDate.now())
+                .introduce("테스트자기소개")
                 .build();
     }
 }
