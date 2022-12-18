@@ -18,6 +18,18 @@ public class Fixture {
                 .build();
     }
 
+    public static User user(long userId) {
+        return User.builder()
+                .id(userId)
+                .email("test@test.com")
+                .introduce("자기소개 테스트")
+                .nickname("test")
+                .profileImgUrl("테스트url")
+                .password("testPassword")
+                .birth(LocalDate.now())
+                .build();
+    }
+
     public static SignupRequest signupRequest() {
         return SignupRequest.builder()
                 .password("1234")

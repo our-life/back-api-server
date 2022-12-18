@@ -26,6 +26,8 @@ public class BcryptPasswordEncoderTest {
     void checkPwd_ture() {
         String password = Fixture.user().getPassword();
         String hashedPassword = passwordEncoder.hash(password);
+        System.out.println(password);
+        System.out.println(hashedPassword);
         boolean result = passwordEncoder.match(password, hashedPassword);
         assertThat(result).isTrue();
     }
