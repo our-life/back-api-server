@@ -23,11 +23,15 @@ public class UserControllerTest {
     @MockBean
     UserService userService;
 
+    public String makeUriValidationDuplication(String email) {
+        return "/users/" + email + "/validation";
+    }
+
     @Test
     @DisplayName("사용가능한 이메일인 경우")
     void validationDuplicationEmailOk() throws Exception {
         String email = Fixture.user().getEmail();
-        String uri = "/users/" + email + "/validation";
+        String uri = makeUriValidationDuplication(email);
 
         when(userService.validateDuplicationEmail(email)).thenReturn(true);
 
@@ -40,7 +44,7 @@ public class UserControllerTest {
     @DisplayName("사용불가능한 이메일인 경우")
     void validationDuplicationEmailConflict() throws Exception {
         String email = Fixture.user().getEmail();
-        String uri = "/users/" + email + "/validation";
+        String uri = makeUriValidationDuplication(email);
 
         when(userService.validateDuplicationEmail(email)).thenReturn(false);
 
