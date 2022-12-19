@@ -1,10 +1,13 @@
 package com.ourlife.service;
 
 import com.ourlife.Fixture;
+import com.ourlife.dto.user.GetUserInfoResponse;
 import com.ourlife.entity.User;
+import com.ourlife.exception.AccountNotFoundException;
 import com.ourlife.exception.DuplicatedEmailException;
 import com.ourlife.repository.UserRepository;
 import com.ourlife.service.impl.UserServiceImpl;
+import com.ourlife.utils.Impl.JwtTokenUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +31,9 @@ UserServiceImplTest {
 
     @Mock
     UserRepository userRepository;
+
+    @Mock
+    JwtTokenUtils jwtTokenUtils;
 
     @Test
     @DisplayName("사용 가능한 이메일이면 true를 반환한다.")
@@ -68,5 +74,43 @@ UserServiceImplTest {
         User user = Fixture.user();
         given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
+    }
+
+    @Test
+    @DisplayName("회원정보 조회 성공")
+    void getUserInfo_success() {
+        User user = Fixture.user(1L);
+        given(jwtTokenUtils.validateToken(anyString())).willReturn(true);
+        given(jwtTokenUtils.parseUserIdFrom(anyString())).willReturn(user.getId());
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+
+        GetUserInfoResponse res = userService.getUserInfo(anyString());
+
+        assertThat(res.getId()).isEqualTo(user.getId());
+        assertThat(res.getBirth()).isEqualTo(user.getBirth());
+        assertThat(res.getIntroduce()).isEqualTo(user.getIntroduce());
+        assertThat(res.getNickname()).isEqualTo(user.getNickname());
+        assertThat(res.getProfileImgUrl()).isEqualTo(user.getProfileImgUrl());
+    }
+
+    @Test
+    @DisplayName("회원정보 조회 실패 invalid token")
+    void getUserInfo_fail_invalid_token() {
+        given(jwtTokenUtils.validateToken(anyString())).willReturn(false);
+
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> userService.getUserInfo(anyString()));
+    }
+
+    @Test
+    @DisplayName("회원정보 조회 실패 user_not_found")
+    void getUserInfo_fail_user_not_found() {
+        User user = Fixture.user(1L);
+        given(jwtTokenUtils.validateToken(anyString())).willReturn(true);
+        given(jwtTokenUtils.parseUserIdFrom(anyString())).willReturn(user.getId());
+        given(userRepository.findById(user.getId())).willReturn(Optional.empty());
+
+        Assertions.assertThrows(AccountNotFoundException.class,
+                () -> userService.getUserInfo(anyString()));
     }
 }
