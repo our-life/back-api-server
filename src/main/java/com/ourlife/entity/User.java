@@ -1,5 +1,6 @@
 package com.ourlife.entity;
 
+import com.ourlife.dto.user.UpdateUserRequest;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,4 +30,11 @@ public class User extends BaseEntity{
     private String introduce;
 
     private String profileImgUrl;
+
+    public void update(UpdateUserRequest request) {
+        this.nickname = request.getNickname();
+        this.email = request.getEmail();
+        this.birth = request.getBirth();
+        this.introduce = request.getIntroduce();
+    }
 }

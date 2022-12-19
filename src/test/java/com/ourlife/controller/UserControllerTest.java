@@ -20,8 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -53,6 +52,8 @@ public class UserControllerTest {
     }
 
     public String makeGetUserInfoUri() { return "/users"; }
+
+    public String makeUpdateUserUri() {return "/users";}
 
     @Test
     @DisplayName("사용가능한 이메일인 경우")
@@ -157,6 +158,57 @@ public class UserControllerTest {
 
         mockMvc.perform(MockMvcRequestBuilders.get(uri)
                         .header("Authorization", "Bearer " + anyString()))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("회원 정보 수정 성공")
+    void updateUser_success() throws Exception {
+        String uri = makeUpdateUserUri();
+        String request = objectMapper.writeValueAsString(Fixture.updateUserRequest());
+
+        when(jwtTokenUtils.resolveToken(any())).thenReturn("123");
+        doNothing().when(userService).updateUser(any(), any());
+
+        mockMvc.perform(MockMvcRequestBuilders.patch(uri)
+                        .header("Authorization", "Bearer " + anyString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("회원 정보 수정 실패 토큰 invalidate")
+    void updateUser_fail_invalid_token() throws Exception {
+        String uri = makeUpdateUserUri();
+        String request = objectMapper.writeValueAsString(Fixture.updateUserRequest());
+
+        when(jwtTokenUtils.resolveToken(any())).thenReturn("123");
+        doThrow(IllegalStateException.class).when(userService).updateUser(any(), any());
+
+        mockMvc.perform(MockMvcRequestBuilders.patch(uri)
+                        .header("Authorization", "Bearer " + anyString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("회원 정보 수정 실패 토큰 없는 회원")
+    void updateUser_fail_user_not_found() throws Exception {
+        String uri = makeUpdateUserUri();
+        String request = objectMapper.writeValueAsString(Fixture.updateUserRequest());
+
+        when(jwtTokenUtils.resolveToken(any())).thenReturn("123");
+        doThrow(AccountNotFoundException.class).when(userService).updateUser(any(), any());
+
+        mockMvc.perform(MockMvcRequestBuilders.patch(uri)
+                        .header("Authorization", "Bearer " + anyString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }

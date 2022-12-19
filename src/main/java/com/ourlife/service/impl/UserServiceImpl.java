@@ -2,6 +2,7 @@ package com.ourlife.service.impl;
 
 import com.ourlife.dto.user.GetUserInfoResponse;
 import com.ourlife.dto.user.SigninRequest;
+import com.ourlife.dto.user.UpdateUserRequest;
 import com.ourlife.entity.User;
 import com.ourlife.exception.AccountNotFoundException;
 import com.ourlife.exception.AccountPasswordMissmatchException;
@@ -12,6 +13,7 @@ import com.ourlife.utils.Impl.BcryptPasswordEncoder;
 import com.ourlife.utils.Impl.JwtTokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -61,5 +63,19 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 유저 입니다."));
 
         return GetUserInfoResponse.from(user);
+    }
+
+    @Transactional
+    @Override
+    public void updateUser(String token, UpdateUserRequest request) {
+        if (!jwtTokenUtils.validateToken(token)) {
+            throw new IllegalStateException("유효하지 않은 토큰입니다.");
+        }
+
+        Long userId = jwtTokenUtils.parseUserIdFrom(token);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 유저 입니다."));
+
+        user.update(request);
     }
 }

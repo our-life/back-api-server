@@ -3,6 +3,7 @@ package com.ourlife.controller;
 import com.ourlife.dto.user.GetUserInfoResponse;
 import com.ourlife.dto.user.SigninRequest;
 import com.ourlife.dto.user.SignupRequest;
+import com.ourlife.dto.user.UpdateUserRequest;
 import com.ourlife.service.UserService;
 import com.ourlife.utils.Impl.JwtTokenUtils;
 import com.ourlife.utils.PasswordEncoder;
@@ -46,5 +47,12 @@ public class UserController {
     public ResponseEntity<GetUserInfoResponse> userInfo(HttpServletRequest req) {
         String token = jwtTokenUtils.resolveToken(req);
         return ResponseEntity.ok(userService.getUserInfo(token));
+    }
+
+    @PatchMapping("/users")
+    public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequest updateUserRequest, HttpServletRequest req) {
+        String token = jwtTokenUtils.resolveToken(req);
+        userService.updateUser(token, updateUserRequest);
+        return ResponseEntity.ok().build();
     }
 }
