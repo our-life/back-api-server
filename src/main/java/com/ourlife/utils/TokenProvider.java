@@ -4,7 +4,7 @@ import com.ourlife.entity.User;
 
 public interface TokenProvider {
 
-    String generateToken(User user);
+    String generateAccessToken(User user);
 
     Long parseUserIdFrom(String token);
 

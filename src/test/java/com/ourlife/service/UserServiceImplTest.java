@@ -66,7 +66,7 @@ UserServiceImplTest {
     @DisplayName("로그인 성공")
     void signin_success(){
         User user = Fixture.user();
-        given(userRepository.findByEmail(user.getEmail()));
+        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
 
     }
 }

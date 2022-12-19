@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * @Return true 사용 가능한 이메일, false 사용 불가능한 이메일
-     * */
+     */
     @Override
     public boolean validateDuplicationEmail(String email) {
         return !userRepository.existsByEmail(email);
@@ -39,13 +39,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String signin(SigninRequest signinRequest) {
-
         User user = userRepository.findByEmail(signinRequest.getEmail())
-                .orElseThrow(()-> new AccountNotFoundException("유저의 이메일이 없습니다."));
+                .orElseThrow(() -> new AccountNotFoundException("유저의 이메일이 없습니다."));
 
-        if(!passwordEncoder.match(signinRequest.getPassword(), user.getPassword())){
+        if (!passwordEncoder.match(signinRequest.getPassword(), user.getPassword())) {
             throw new AccountPasswordMissmatchException("비밀번호를 확인해주세요.");
         }
-        return jwtTokenUtils.generateToken(user);
+
+        return jwtTokenUtils.generateAccessToken(user);
     }
 }

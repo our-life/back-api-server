@@ -1,6 +1,6 @@
 package com.ourlife.utils;
 
-import com.ourlife.Config.JwtTokenProperties;
+import com.ourlife.config.JwtTokenProperties;
 import com.ourlife.Fixture;
 import com.ourlife.entity.User;
 import com.ourlife.utils.Impl.JwtTokenUtils;
@@ -16,9 +16,9 @@ public class JwtTokenUtilsTest {
 
     @Test
     @DisplayName("토큰이 잘 생성되어야 한다.")
-    void generateToken() {
+    void generateAccessToken() {
         User user = Fixture.user(1L);
-        String token = jwtTokenUtils.generateToken(user);
+        String token = jwtTokenUtils.generateAccessToken(user);
         Assertions.assertThat(token).isNotNull();
         System.out.println(token);
     }
@@ -27,7 +27,7 @@ public class JwtTokenUtilsTest {
     @DisplayName("토큰에 유저 아이디가 들어있는지 확인")
     void parseUserIdFrom() {
         User user = Fixture.user(1L);
-        String token = jwtTokenUtils.generateToken(user);
+        String token = jwtTokenUtils.generateAccessToken(user);
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         Assertions.assertThat(userId).isEqualTo(user.getId());
         System.out.println(userId);

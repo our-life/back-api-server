@@ -30,8 +30,9 @@ public class UserController {
     }
 
     @PostMapping("/users/signin")
-    public ResponseEntity<String> signin(@RequestBody SigninRequest signinRequest){
-        return ResponseEntity.ok().body(userService.signin(signinRequest));
+    public ResponseEntity<Void> signin(@RequestBody SigninRequest signinRequest) {
+        return ResponseEntity.ok().
+                header("Authorization", "Bearer " + userService.signin(signinRequest)).build();
     }
 
 }

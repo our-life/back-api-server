@@ -1,6 +1,6 @@
 package com.ourlife.utils.Impl;
 
-import com.ourlife.Config.JwtTokenProperties;
+import com.ourlife.config.JwtTokenProperties;
 import com.ourlife.entity.User;
 import com.ourlife.utils.TokenProvider;
 import io.jsonwebtoken.Claims;
@@ -19,30 +19,6 @@ public class JwtTokenUtils implements TokenProvider {
 
     private final JwtTokenProperties jwtTokenProperties;
 
-//    public String generateToken(User user) {
-//        Date now = new Date();
-//        return Jwts.builder()
-//                .setHeader(createHeader())   // (1)
-//                .setClaims(createClaims(user))  // (2)
-//                .setIssuedAt(now)  // (3)
-//                .setExpiration(new Date(now.getTime()+ Duration.ofHours(3).toMillis())) // (4)
-//                .signWith(SignatureAlgorithm.HS256, secretKey)  // (5)
-//                .compact();
-//    }
-//    private Map<String, Object> createHeader() {
-//        Map<String, Object> header = new HashMap<>();
-//        header.put("typ","JWT");
-//        header.put("alg","HS256"); // 해시 256 암호화
-//        return header;
-//    }
-//
-//    private Map<String, Object> createClaims(User user) { // payload
-//        Map<String, Object> claims = new HashMap<>();
-//        claims.put("id",user.getId());
-//        claims.put("email",user.getEmail());
-//        return claims;
-//    }
-
     /**
      * methodName : createToken
      * author : 김정민
@@ -52,14 +28,14 @@ public class JwtTokenUtils implements TokenProvider {
      * @param user 회원 정보
      * @return string 토큰
      */
-    public String generateToken(User user) {
+    public String generateAccessToken(User user) {
         Claims claims = Jwts.claims().setSubject(String.valueOf(user.getId()));
         Date now = new Date();
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + jwtTokenProperties.getTokenValidPeriod()))
+                .setExpiration(new Date(now.getTime() + jwtTokenProperties.getAccessTokenValidPeriod()))
                 .signWith(SignatureAlgorithm.HS256, jwtTokenProperties.getSecretKey())
                 .compact();
     }

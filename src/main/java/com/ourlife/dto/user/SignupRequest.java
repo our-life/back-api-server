@@ -2,7 +2,6 @@ package com.ourlife.dto.user;
 
 import com.ourlife.entity.User;
 import com.ourlife.utils.PasswordEncoder;
-import jakarta.persistence.Column;
 import lombok.*;
 
 import java.time.LocalDate;

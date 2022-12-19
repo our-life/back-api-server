@@ -1,0 +1,23 @@
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "password": "pw",
+  "nickname" : "hwan",
+  "email":"email@naver.com",
+  "birth":"1999-05-17",
+  "introduce" : "가나다라"
+}
+###
+
+POST localhost:8080/users/signin
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDEwOTUxLCJleHAiOjE2NzE0MTQ1NTF9.6g1B8KyTNDmcmVFllvFKlviGwP9aigy8kXi9Z79cj1Y
+Content-Type: application/json
+
+{
+"password": "pw",
+"nickname" : "hwan",
+"email":"email@naver.com",
+"birth":"1999-05-17",
+"introduce" : "가나다라"
+}
