@@ -55,6 +55,8 @@ public class UserControllerTest {
 
     public String makeUpdateUserUri() {return "/users";}
 
+    public String makeDeleteUserUri() {return "/users";}
+
     @Test
     @DisplayName("사용가능한 이메일인 경우")
     void validationDuplicationEmailOk() throws Exception {
@@ -209,6 +211,50 @@ public class UserControllerTest {
                         .header("Authorization", "Bearer " + anyString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(request))
+                .andDo(print())
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("회원 정보 삭제 성공")
+    void deleteUser_success() throws Exception {
+        String uri = makeDeleteUserUri();
+
+        when(jwtTokenUtils.resolveToken(any())).thenReturn("123");
+        doNothing().when(userService).deleteUser(any());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(uri)
+                        .header("Authorization", "Bearer " + anyString()))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("회원 정보 삭제 실패 토큰 invalidate")
+    void deleteUser_fail_invalid_token() throws Exception {
+        String uri = makeDeleteUserUri();
+
+        when(jwtTokenUtils.resolveToken(any())).thenReturn("123");
+        doThrow(IllegalStateException.class)
+                .when(userService).deleteUser(any());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(uri)
+                        .header("Authorization", "Bearer " + anyString()))
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("회원 정보 수정 삭제 토큰 없는 회원")
+    void deleteUser_fail_user_not_found() throws Exception {
+        String uri = makeDeleteUserUri();
+
+        when(jwtTokenUtils.resolveToken(any())).thenReturn("123");
+        doThrow(AccountNotFoundException.class)
+                .when(userService).deleteUser(any());
+
+        mockMvc.perform(MockMvcRequestBuilders.delete(uri)
+                        .header("Authorization", "Bearer " + anyString()))
                 .andDo(print())
                 .andExpect(status().isNotFound());
     }

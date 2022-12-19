@@ -26,7 +26,7 @@ Content-Type: application/json
 ###
 #회원 정보 조회
 GET localhost:8080/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDY1NzU1LCJleHAiOjE2NzE1NTIxNTV9.vWFFfHzXQb-CrB_gF_SxAorL4rz1yZFq8-EU92O40Xc
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDcwNTcyLCJleHAiOjE2NzE1NTY5NzJ9.58FSS5cs9IZ3i6njPSXX4ZukMVXADAG_33bEEfYUKIU
 ###
 
 #회원 정보 수정
@@ -40,3 +40,7 @@ Content-Type: application/json
 "birth":"1998-05-17",
 "introduce" : "수정"
 }
+###
+#회원 정보 삭제
+DELETE localhost:8080/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDcwNTcyLCJleHAiOjE2NzE1NTY5NzJ9.58FSS5cs9IZ3i6njPSXX4ZukMVXADAG_33bEEfYUKIU

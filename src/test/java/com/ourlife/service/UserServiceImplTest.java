@@ -69,13 +69,13 @@ UserServiceImplTest {
         Assertions.assertThrows(DuplicatedEmailException.class, () -> userService.signup(user));
     }
 
-    @Test
-    @DisplayName("로그인 성공")
-    void signin_success(){
-        User user = Fixture.user();
-        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
-
-    }
+//    @Test
+//    @DisplayName("로그인 성공")
+//    void signin_success(){
+//        User user = Fixture.user();
+//        given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
+//
+//    }
 
     @Test
     @DisplayName("회원정보 조회 성공")
@@ -137,10 +137,8 @@ UserServiceImplTest {
     }
 
     @Test
-    @DisplayName("회원정보 수정 유효하지 않은 토큰")
+    @DisplayName("회원정보 수정 존재 하지 않는 회원")
     void updateUser_fail_user_not_found() {
-        given(jwtTokenUtils.validateToken(anyString())).willReturn(false);
-
         User user = Fixture.user(1L);
         given(jwtTokenUtils.validateToken(anyString())).willReturn(true);
         given(jwtTokenUtils.parseUserIdFrom(anyString())).willReturn(user.getId());
@@ -148,5 +146,38 @@ UserServiceImplTest {
 
         Assertions.assertThrows(AccountNotFoundException.class,
                 () -> userService.updateUser(Fixture.token(), Fixture.updateUserRequest()));
+    }
+
+    @Test
+    @DisplayName("회원정보 삭제")
+    void deleteUser() {
+        User user = Fixture.user(1L);
+        given(jwtTokenUtils.validateToken(anyString())).willReturn(true);
+        given(jwtTokenUtils.parseUserIdFrom(anyString())).willReturn(user.getId());
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+
+        Assertions.assertDoesNotThrow(() ->
+                userService.deleteUser(Fixture.token()));
+    }
+
+    @Test
+    @DisplayName("회원정보 삭제 유효하지 않은 토큰")
+    void deleteUser_fail_invalid_token() {
+        given(jwtTokenUtils.validateToken(anyString())).willReturn(false);
+
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> userService.deleteUser(Fixture.token()));
+    }
+
+    @Test
+    @DisplayName("회원정보 삭제 존재하지 않는 회원")
+    void deleteUser_fail_user_not_found() {
+        User user = Fixture.user(1L);
+        given(jwtTokenUtils.validateToken(anyString())).willReturn(true);
+        given(jwtTokenUtils.parseUserIdFrom(anyString())).willReturn(user.getId());
+        given(userRepository.findById(user.getId())).willReturn(Optional.empty());
+
+        Assertions.assertThrows(AccountNotFoundException.class,
+                () -> userService.deleteUser(Fixture.token()));
     }
 }
