@@ -1,11 +1,25 @@
 package com.ourlife;
 
 import com.ourlife.dto.user.SignupRequest;
+import com.ourlife.dto.user.UpdateUserRequest;
 import com.ourlife.entity.User;
 
 import java.time.LocalDate;
 
 public class Fixture {
+
+    public static String token() {
+        return "token";
+    }
+
+    public static UpdateUserRequest updateUserRequest() {
+        return UpdateUserRequest.builder()
+                .email("test@test.com")
+                .introduce("자기소개 테스트")
+                .nickname("test")
+                .birth(LocalDate.now())
+                .build();
+    }
 
     public static User user() {
         return User.builder()

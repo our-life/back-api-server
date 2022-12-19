@@ -19,6 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
 
@@ -112,5 +113,40 @@ UserServiceImplTest {
 
         Assertions.assertThrows(AccountNotFoundException.class,
                 () -> userService.getUserInfo(anyString()));
+    }
+
+    @Test
+    @DisplayName("회원정보 수정")
+    void updateUser() {
+        User user = Fixture.user(1L);
+        given(jwtTokenUtils.validateToken(anyString())).willReturn(true);
+        given(jwtTokenUtils.parseUserIdFrom(anyString())).willReturn(user.getId());
+        given(userRepository.findById(user.getId())).willReturn(Optional.of(user));
+
+        Assertions.assertDoesNotThrow(() ->
+                userService.updateUser(Fixture.token(), Fixture.updateUserRequest()));
+    }
+
+    @Test
+    @DisplayName("회원정보 수정 유효하지 않은 토큰")
+    void updateUser_fail_invalid_token() {
+        given(jwtTokenUtils.validateToken(anyString())).willReturn(false);
+
+        Assertions.assertThrows(IllegalStateException.class,
+                () -> userService.updateUser(Fixture.token(), Fixture.updateUserRequest()));
+    }
+
+    @Test
+    @DisplayName("회원정보 수정 유효하지 않은 토큰")
+    void updateUser_fail_user_not_found() {
+        given(jwtTokenUtils.validateToken(anyString())).willReturn(false);
+
+        User user = Fixture.user(1L);
+        given(jwtTokenUtils.validateToken(anyString())).willReturn(true);
+        given(jwtTokenUtils.parseUserIdFrom(anyString())).willReturn(user.getId());
+        given(userRepository.findById(user.getId())).willReturn(Optional.empty());
+
+        Assertions.assertThrows(AccountNotFoundException.class,
+                () -> userService.updateUser(Fixture.token(), Fixture.updateUserRequest()));
     }
 }
