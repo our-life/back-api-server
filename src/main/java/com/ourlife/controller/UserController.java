@@ -55,4 +55,11 @@ public class UserController {
         userService.updateUser(token, updateUserRequest);
         return ResponseEntity.ok().build();
     }
+
+    @DeleteMapping("/users")
+    public ResponseEntity<Void> deleteUser(HttpServletRequest req) {
+        String token = jwtTokenUtils.resolveToken(req);
+        userService.deleteUser(token);
+        return ResponseEntity.ok().build();
+    }
 }

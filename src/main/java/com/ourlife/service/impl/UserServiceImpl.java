@@ -78,4 +78,18 @@ public class UserServiceImpl implements UserService {
 
         user.update(request);
     }
+
+    @Transactional
+    @Override
+    public void deleteUser(String token) {
+        if (!jwtTokenUtils.validateToken(token)) {
+            throw new IllegalStateException("유효하지 않은 토큰입니다.");
+        }
+
+        Long userId = jwtTokenUtils.parseUserIdFrom(token);
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 유저 입니다."));
+
+        userRepository.delete(user);
+    }
 }
