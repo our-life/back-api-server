@@ -1,3 +1,4 @@
+# 회원 가입
 POST localhost:8080/users
 Content-Type: application/json
 
@@ -9,7 +10,7 @@ Content-Type: application/json
   "introduce" : "가나다라"
 }
 ###
-
+# 로그인
 POST localhost:8080/users/signin
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDEwOTUxLCJleHAiOjE2NzE0MTQ1NTF9.6g1B8KyTNDmcmVFllvFKlviGwP9aigy8kXi9Z79cj1Y
 Content-Type: application/json
@@ -21,3 +22,8 @@ Content-Type: application/json
 "birth":"1999-05-17",
 "introduce" : "가나다라"
 }
+
+###
+#회원 정보 조회
+GET localhost:8080/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDY1NzU1LCJleHAiOjE2NzE1NTIxNTV9.vWFFfHzXQb-CrB_gF_SxAorL4rz1yZFq8-EU92O40Xc

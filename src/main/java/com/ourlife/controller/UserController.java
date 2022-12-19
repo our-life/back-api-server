@@ -1,14 +1,19 @@
 package com.ourlife.controller;
 
+import com.ourlife.dto.user.GetUserInfoResponse;
 import com.ourlife.dto.user.SigninRequest;
 import com.ourlife.dto.user.SignupRequest;
 import com.ourlife.service.UserService;
+import com.ourlife.utils.Impl.JwtTokenUtils;
 import com.ourlife.utils.PasswordEncoder;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class UserController {
@@ -16,6 +21,8 @@ public class UserController {
     private final UserService userService;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final JwtTokenUtils jwtTokenUtils;
 
     @GetMapping("/users/{email}/validation")
     public ResponseEntity<Void> validationDuplicationEmail(@PathVariable("email") String email) {
@@ -35,4 +42,9 @@ public class UserController {
                 header("Authorization", "Bearer " + userService.signin(signinRequest)).build();
     }
 
+    @GetMapping("/users")
+    public ResponseEntity<GetUserInfoResponse> userInfo(HttpServletRequest req) {
+        String token = jwtTokenUtils.resolveToken(req);
+        return ResponseEntity.ok(userService.getUserInfo(token));
+    }
 }

@@ -1,5 +1,6 @@
 package com.ourlife.service;
 
+import com.ourlife.dto.user.GetUserInfoResponse;
 import com.ourlife.dto.user.SigninRequest;
 import com.ourlife.entity.User;
 
@@ -10,4 +11,6 @@ public interface UserService {
     void signup(User user);
 
     String signin(SigninRequest signinRequest);
+
+    GetUserInfoResponse getUserInfo(String token);
 }

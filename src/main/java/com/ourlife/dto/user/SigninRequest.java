@@ -1,6 +1,5 @@
 package com.ourlife.dto.user;
 
-import lombok.Data;
 import lombok.Getter;
 
 @Getter
