@@ -14,4 +14,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse(e.getMessage()));
     }
 
+    @ExceptionHandler(AccountNotFoundException.class)
+    public ResponseEntity<?> handleAccountException(AccountNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
+    }
+
+    @ExceptionHandler(AccountPasswordMissmatchException.class)
+    public ResponseEntity<?> handleAccountPasswordMissmatchException(AccountPasswordMissmatchException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
+    }
 }

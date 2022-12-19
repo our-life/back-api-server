@@ -1,5 +1,6 @@
 package com.ourlife.controller;
 
+import com.ourlife.dto.user.SigninRequest;
 import com.ourlife.dto.user.SignupRequest;
 import com.ourlife.service.UserService;
 import com.ourlife.utils.PasswordEncoder;
@@ -27,4 +28,10 @@ public class UserController {
         userService.signup(signupRequest.toEntity(passwordEncoder));
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
+
+    @PostMapping("/users/signin")
+    public ResponseEntity<String> signin(@RequestBody SigninRequest signinRequest){
+        return ResponseEntity.ok().body(userService.signin(signinRequest));
+    }
+
 }

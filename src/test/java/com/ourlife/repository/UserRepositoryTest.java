@@ -9,6 +9,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
@@ -38,5 +40,38 @@ public class UserRepositoryTest {
     void existsByEmail_False() {
         boolean result = userRepository.existsByEmail(Fixture.user().getEmail());
         assertThat(result).isFalse();
+    }
+
+
+    @Test
+    @DisplayName("이메일 기준으로 유저 정보 불러오기")
+    void findByEmail_True(){
+        User savedUser = saveUser();
+        String email = "test@test.com";
+        // Fixture의 유저를 받아오면 어차피 같은 값이 아닐까...
+        Optional<User> optionalUser = userRepository.findByEmail(email);
+
+        if(optionalUser.isPresent()){
+            assertThat(optionalUser.get().getEmail()).isEqualTo(email);
+        }else{
+            assertThat(optionalUser).isEmpty();
+        }
+
+    }
+
+    @Test
+    @DisplayName("이메일 기준으로 유저 정보 불러오기")
+    void findByEmail_False(){
+        User savedUser = saveUser();
+        String email = "test@test.com";
+        // Fixture의 유저를 받아오면 어차피 같은 값이 아닐까...
+        Optional<User> optionalUser = userRepository.findByEmail(email+".com");
+
+        if(optionalUser.isPresent()){
+            assertThat(optionalUser.get().getEmail()).isEqualTo(email);
+        }else{
+            assertThat(optionalUser).isEmpty();
+        }
+
     }
 }
