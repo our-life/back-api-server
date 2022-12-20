@@ -4,8 +4,8 @@ import com.ourlife.dto.user.GetUserInfoResponse;
 import com.ourlife.dto.user.SigninRequest;
 import com.ourlife.dto.user.UpdateUserRequest;
 import com.ourlife.entity.User;
-import com.ourlife.exception.AccountNotFoundException;
-import com.ourlife.exception.AccountPasswordMissmatchException;
+import com.ourlife.exception.UserNotFoundException;
+import com.ourlife.exception.UserPasswordMissmatchException;
 import com.ourlife.exception.DuplicatedEmailException;
 import com.ourlife.repository.UserRepository;
 import com.ourlife.service.UserService;
@@ -43,10 +43,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public String signin(SigninRequest signinRequest) {
         User user = userRepository.findByEmail(signinRequest.getEmail())
-                .orElseThrow(() -> new AccountNotFoundException("유저의 이메일이 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("유저의 이메일이 없습니다."));
 
         if (!passwordEncoder.match(signinRequest.getPassword(), user.getPassword())) {
-            throw new AccountPasswordMissmatchException("비밀번호를 확인해주세요.");
+            throw new UserPasswordMissmatchException("비밀번호를 확인해주세요.");
         }
 
         return jwtTokenUtils.generateAccessToken(user);
@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
 
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 유저 입니다."));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
 
         return GetUserInfoResponse.from(user);
     }
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
 
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 유저 입니다."));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
 
         user.update(request);
     }
@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new AccountNotFoundException("존재하지 않는 유저 입니다."));
+                .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
 
         userRepository.delete(user);
     }

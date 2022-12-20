@@ -3,7 +3,7 @@ package com.ourlife.service;
 import com.ourlife.Fixture;
 import com.ourlife.dto.user.GetUserInfoResponse;
 import com.ourlife.entity.User;
-import com.ourlife.exception.AccountNotFoundException;
+import com.ourlife.exception.UserNotFoundException;
 import com.ourlife.exception.DuplicatedEmailException;
 import com.ourlife.repository.UserRepository;
 import com.ourlife.service.impl.UserServiceImpl;
@@ -111,7 +111,7 @@ UserServiceImplTest {
         given(jwtTokenUtils.parseUserIdFrom(anyString())).willReturn(user.getId());
         given(userRepository.findById(user.getId())).willReturn(Optional.empty());
 
-        Assertions.assertThrows(AccountNotFoundException.class,
+        Assertions.assertThrows(UserNotFoundException.class,
                 () -> userService.getUserInfo(anyString()));
     }
 
@@ -144,7 +144,7 @@ UserServiceImplTest {
         given(jwtTokenUtils.parseUserIdFrom(anyString())).willReturn(user.getId());
         given(userRepository.findById(user.getId())).willReturn(Optional.empty());
 
-        Assertions.assertThrows(AccountNotFoundException.class,
+        Assertions.assertThrows(UserNotFoundException.class,
                 () -> userService.updateUser(Fixture.token(), Fixture.updateUserRequest()));
     }
 
@@ -177,7 +177,7 @@ UserServiceImplTest {
         given(jwtTokenUtils.parseUserIdFrom(anyString())).willReturn(user.getId());
         given(userRepository.findById(user.getId())).willReturn(Optional.empty());
 
-        Assertions.assertThrows(AccountNotFoundException.class,
+        Assertions.assertThrows(UserNotFoundException.class,
                 () -> userService.deleteUser(Fixture.token()));
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ourlife.Fixture;
 import com.ourlife.dto.user.GetUserInfoResponse;
 import com.ourlife.dto.user.SignupRequest;
-import com.ourlife.exception.AccountNotFoundException;
+import com.ourlife.exception.UserNotFoundException;
 import com.ourlife.exception.DuplicatedEmailException;
 import com.ourlife.service.UserService;
 import com.ourlife.utils.Impl.JwtTokenUtils;
@@ -155,7 +155,7 @@ public class UserControllerTest {
         String uri = makeGetUserInfoUri();
 
         when(jwtTokenUtils.resolveToken(any())).thenReturn("123");
-        doThrow(AccountNotFoundException.class)
+        doThrow(UserNotFoundException.class)
                 .when(userService).getUserInfo(anyString());
 
         mockMvc.perform(MockMvcRequestBuilders.get(uri)
@@ -205,7 +205,7 @@ public class UserControllerTest {
         String request = objectMapper.writeValueAsString(Fixture.updateUserRequest());
 
         when(jwtTokenUtils.resolveToken(any())).thenReturn("123");
-        doThrow(AccountNotFoundException.class).when(userService).updateUser(any(), any());
+        doThrow(UserNotFoundException.class).when(userService).updateUser(any(), any());
 
         mockMvc.perform(MockMvcRequestBuilders.patch(uri)
                         .header("Authorization", "Bearer " + anyString())
@@ -250,7 +250,7 @@ public class UserControllerTest {
         String uri = makeDeleteUserUri();
 
         when(jwtTokenUtils.resolveToken(any())).thenReturn("123");
-        doThrow(AccountNotFoundException.class)
+        doThrow(UserNotFoundException.class)
                 .when(userService).deleteUser(any());
 
         mockMvc.perform(MockMvcRequestBuilders.delete(uri)

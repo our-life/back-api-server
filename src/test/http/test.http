@@ -27,6 +27,7 @@ Content-Type: application/json
 #회원 정보 조회
 GET localhost:8080/users
 Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDcwNTcyLCJleHAiOjE2NzE1NTY5NzJ9.58FSS5cs9IZ3i6njPSXX4ZukMVXADAG_33bEEfYUKIU
+Cookie: sessionId=1234
 ###
 
 #회원 정보 수정
