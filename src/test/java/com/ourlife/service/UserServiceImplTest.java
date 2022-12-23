@@ -36,8 +36,7 @@ UserServiceImplTest {
     UserServiceImpl userService;
     @Mock
     BcryptPasswordEncoder passwordEncoder;
-    @Mock
-    JwtTokenUtils tokenUtils;
+
     @Mock
     UserRepository userRepository;
 
@@ -85,7 +84,7 @@ UserServiceImplTest {
 
         given(userRepository.findByEmail(user.getEmail())).willReturn(Optional.of(user));
         given(passwordEncoder.match(eq(user.getPassword()), anyString())).willReturn(true);
-        given(tokenUtils.generateAccessToken(user)).willReturn(anyString());
+        given(jwtTokenUtils.generateAccessToken(user)).willReturn(anyString());
 
         Assertions.assertDoesNotThrow(() -> userService.signin(Fixture.signinRequest()));
 /*
@@ -115,7 +114,9 @@ UserServiceImplTest {
 
         UserNotFoundException exception = Assertions.assertThrows(UserNotFoundException.class,
                 () -> userService.signin(Fixture.signinRequest()));
+    }
 
+    @Test
     @DisplayName("회원정보 조회 성공")
     void getUserInfo_success() {
         User user = Fixture.user(1L);

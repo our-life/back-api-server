@@ -1,9 +1,11 @@
 package com.ourlife.controller;
 
-import com.ourlife.dto.user.SigninRequest;
-import com.ourlife.dto.user.SignupRequest;
+import com.ourlife.dto.user.*;
 import com.ourlife.service.UserService;
+import com.ourlife.utils.Impl.JwtTokenUtils;
 import com.ourlife.utils.PasswordEncoder;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,8 @@ public class UserController {
     private final UserService userService;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final JwtTokenUtils jwtTokenUtils;
 
     @GetMapping("/users/{email}/validation")
     public ResponseEntity<Void> validationDuplicationEmail(@PathVariable("email") String email) {

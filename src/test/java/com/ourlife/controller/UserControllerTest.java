@@ -238,6 +238,7 @@ public class UserControllerTest {
         doThrow(IllegalStateException.class)
                 .when(userService).deleteUser(any());
 
+
         mockMvc.perform(MockMvcRequestBuilders.delete(uri)
                         .header("Authorization", "Bearer " + anyString()))
                 .andDo(print())

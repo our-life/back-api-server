@@ -1,16 +1,27 @@
 package com.ourlife.service.impl;
 
-import com.ourlife.dto.user.SigninRequest;
+import com.ourlife.dto.user.*;
+import com.ourlife.entity.Follow;
 import com.ourlife.entity.User;
-import com.ourlife.exception.AccountNotFoundException;
-import com.ourlife.exception.AccountPasswordMissmatchException;
 import com.ourlife.exception.DuplicatedEmailException;
+import com.ourlife.exception.FollowMissMatchException;
+import com.ourlife.exception.UserNotFoundException;
+import com.ourlife.exception.UserPasswordMissmatchException;
+import com.ourlife.repository.FollowRepository;
 import com.ourlife.repository.UserRepository;
 import com.ourlife.service.UserService;
 import com.ourlife.utils.Impl.BcryptPasswordEncoder;
 import com.ourlife.utils.Impl.JwtTokenUtils;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -19,6 +30,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final BcryptPasswordEncoder passwordEncoder;
     private final JwtTokenUtils jwtTokenUtils;
+    private final FollowRepository followRepository;
 
     /**
      * @Return true 사용 가능한 이메일, false 사용 불가능한 이메일
