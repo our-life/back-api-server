@@ -4,20 +4,60 @@ Content-Type: application/json
 {
   "password": "pw",
   "nickname" : "hwan",
-  "email":"email@naver.com",
+  "email":"email@naver.com1",
+  "birth":"1999-05-17",
+  "introduce" : "가나다라"
+}
+###
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "password": "pw",
+  "nickname" : "hwan",
+  "email":"email@naver.com2",
   "birth":"1999-05-17",
   "introduce" : "가나다라"
 }
 ###
 
 POST localhost:8080/users/signin
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDEwOTUxLCJleHAiOjE2NzE0MTQ1NTF9.6g1B8KyTNDmcmVFllvFKlviGwP9aigy8kXi9Z79cj1Y
 Content-Type: application/json
 
 {
-"password": "pw",
-"nickname" : "hwan",
-"email":"email@naver.com",
-"birth":"1999-05-17",
-"introduce" : "가나다라"
+  "email":"email@naver.com",
+  "password": "pw"
+}
+
+###
+POST localhost:8080/users/follow
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE1NjYzLCJleHAiOjE2NzE2MDIwNjN9.Re9ZRW9spDkTRsrzxz-gbAS1SuktwjBG4PHmFsRsQWo
+Content-Type: application/json
+
+{
+"toUserEmail":"email@naver.com1"
+}
+###
+DELETE localhost:8080/users/follow
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE0ODEwLCJleHAiOjE2NzE2MDEyMTB9.mKJ1O0kSmrtk1z-8071HNYMDKAaDux0o-k2CbIEH_jw
+Content-Type: application/json
+
+{
+  "toUserEmail":"email@naver.com1"
+}
+###
+GET localhost:8080/users/follower
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE1NTcxLCJleHAiOjE2NzE2MDE5NzF9.BiGrWsy7PhzLslaVlKjNnpC4r_sWDmAd_3CJWYSnZZ8
+Content-Type: application/json
+
+{
+
+}
+###
+GET localhost:8080/users/following
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE1NTcxLCJleHAiOjE2NzE2MDE5NzF9.BiGrWsy7PhzLslaVlKjNnpC4r_sWDmAd_3CJWYSnZZ8
+Content-Type: application/json
+
+{
+
 }
