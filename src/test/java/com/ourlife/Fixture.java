@@ -1,5 +1,6 @@
 package com.ourlife;
 
+import com.ourlife.dto.user.SigninRequest;
 import com.ourlife.dto.user.SignupRequest;
 import com.ourlife.dto.user.UpdateUserRequest;
 import com.ourlife.entity.User;
@@ -51,6 +52,13 @@ public class Fixture {
                 .email("test@test.com")
                 .birth(LocalDate.now())
                 .introduce("테스트자기소개")
+                .build();
+    }
+
+    public static SigninRequest signinRequest(){
+        return SigninRequest.builder()
+                .email("test@test.com")
+                .password("testPassword")
                 .build();
     }
 }

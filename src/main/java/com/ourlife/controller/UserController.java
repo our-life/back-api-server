@@ -1,20 +1,14 @@
 package com.ourlife.controller;
 
-import com.ourlife.dto.user.GetUserInfoResponse;
 import com.ourlife.dto.user.SigninRequest;
 import com.ourlife.dto.user.SignupRequest;
-import com.ourlife.dto.user.UpdateUserRequest;
 import com.ourlife.service.UserService;
-import com.ourlife.utils.Impl.JwtTokenUtils;
 import com.ourlife.utils.PasswordEncoder;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @RequiredArgsConstructor
 @RestController
 public class UserController {
@@ -22,8 +16,6 @@ public class UserController {
     private final UserService userService;
 
     private final PasswordEncoder passwordEncoder;
-
-    private final JwtTokenUtils jwtTokenUtils;
 
     @GetMapping("/users/{email}/validation")
     public ResponseEntity<Void> validationDuplicationEmail(@PathVariable("email") String email) {
@@ -35,12 +27,6 @@ public class UserController {
     public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest) {
         userService.signup(signupRequest.toEntity(passwordEncoder));
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
-    @PostMapping("/users/signin")
-    public ResponseEntity<Void> signin(@RequestBody SigninRequest signinRequest) {
-        return ResponseEntity.ok().
-                header("Authorization", "Bearer " + userService.signin(signinRequest)).build();
     }
 
     @GetMapping("/users")
@@ -61,5 +47,34 @@ public class UserController {
         String token = jwtTokenUtils.resolveToken(req);
         userService.deleteUser(token);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/users/signin")
+    public ResponseEntity<Void> signin(@RequestBody SigninRequest signinRequest) {
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + userService.signin(signinRequest)).build();
+    }
+
+    @PostMapping("/users/follow")
+    public ResponseEntity<Void> addFollow(@RequestBody FollowRequest followRequest, ServletRequest request){
+        userService.addFollow(followRequest, request);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+    @DeleteMapping("/users/follow")
+    public ResponseEntity<Void> deleteFollow(@RequestBody FollowRequest followRequest, ServletRequest request){
+        userService.deleteFollow(followRequest, request);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
+
+    @GetMapping("/users/follow/follower")
+    public ResponseEntity<?> getFollower(ServletRequest request){
+        return ResponseEntity.ok().body(userService.getFollower(request));
+    }
+
+    @GetMapping("/users/follow/following")
+    public ResponseEntity<Object> getFollowing(ServletRequest request){
+        return ResponseEntity.ok().body(userService.getFollowing(request));
     }
 }

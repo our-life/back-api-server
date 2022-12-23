@@ -1,47 +1,63 @@
-# 회원 가입
 POST localhost:8080/users
 Content-Type: application/json
 
 {
   "password": "pw",
   "nickname" : "hwan",
-  "email":"email@naver.com",
+  "email":"email@naver.com1",
   "birth":"1999-05-17",
   "introduce" : "가나다라"
 }
 ###
-# 로그인
+POST localhost:8080/users
+Content-Type: application/json
+
+{
+  "password": "pw",
+  "nickname" : "hwan",
+  "email":"email@naver.com2",
+  "birth":"1999-05-17",
+  "introduce" : "가나다라"
+}
+###
+
 POST localhost:8080/users/signin
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDEwOTUxLCJleHAiOjE2NzE0MTQ1NTF9.6g1B8KyTNDmcmVFllvFKlviGwP9aigy8kXi9Z79cj1Y
 Content-Type: application/json
 
 {
-"password": "pw",
-"nickname" : "hwan",
-"email":"email@naver.com",
-"birth":"1999-05-17",
-"introduce" : "가나다라"
+  "email":"email@naver.com",
+  "password": "pw"
 }
 
 ###
-#회원 정보 조회
-GET localhost:8080/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDcwNTcyLCJleHAiOjE2NzE1NTY5NzJ9.58FSS5cs9IZ3i6njPSXX4ZukMVXADAG_33bEEfYUKIU
-Cookie: sessionId=1234
-###
-
-#회원 정보 수정
-PATCH localhost:8080/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDY1NzU1LCJleHAiOjE2NzE1NTIxNTV9.vWFFfHzXQb-CrB_gF_SxAorL4rz1yZFq8-EU92O40Xc
+POST localhost:8080/users/follow
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE1NjYzLCJleHAiOjE2NzE2MDIwNjN9.Re9ZRW9spDkTRsrzxz-gbAS1SuktwjBG4PHmFsRsQWo
 Content-Type: application/json
 
 {
-"nickname" : "hwan",
-"email":"email@naver.com",
-"birth":"1998-05-17",
-"introduce" : "수정"
+"toUserEmail":"email@naver.com1"
 }
 ###
-#회원 정보 삭제
-DELETE localhost:8080/users
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNDcwNTcyLCJleHAiOjE2NzE1NTY5NzJ9.58FSS5cs9IZ3i6njPSXX4ZukMVXADAG_33bEEfYUKIU
+DELETE localhost:8080/users/follow
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE0ODEwLCJleHAiOjE2NzE2MDEyMTB9.mKJ1O0kSmrtk1z-8071HNYMDKAaDux0o-k2CbIEH_jw
+Content-Type: application/json
+
+{
+  "toUserEmail":"email@naver.com1"
+}
+###
+GET localhost:8080/users/follower
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE1NTcxLCJleHAiOjE2NzE2MDE5NzF9.BiGrWsy7PhzLslaVlKjNnpC4r_sWDmAd_3CJWYSnZZ8
+Content-Type: application/json
+
+{
+
+}
+###
+GET localhost:8080/users/following
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE1NTcxLCJleHAiOjE2NzE2MDE5NzF9.BiGrWsy7PhzLslaVlKjNnpC4r_sWDmAd_3CJWYSnZZ8
+Content-Type: application/json
+
+{
+
+}
