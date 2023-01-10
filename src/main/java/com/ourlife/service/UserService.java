@@ -1,10 +1,6 @@
 package com.ourlife.service;
 
-import com.ourlife.dto.user.FollowRequest;
-import com.ourlife.dto.user.GetFollowerResponse;
-import com.ourlife.dto.user.GetUserInfoResponse;
-import com.ourlife.dto.user.SigninRequest;
-import com.ourlife.dto.user.UpdateUserRequest;
+import com.ourlife.dto.user.*;
 import com.ourlife.entity.User;
 import jakarta.servlet.ServletRequest;
 
@@ -24,13 +20,15 @@ public interface UserService {
 
     void deleteUser(String token);
 
-    void addFollow(FollowRequest followRequest, ServletRequest request);
+    List<GetUserListResponse> getUserList(GetUserListRequest userListRequest, String token);
+
+    void addFollow(FollowRequest followRequest, String token);
 
     Boolean validateFollow(User fromUser, User toUser);
 
-    void deleteFollow(FollowRequest followRequest, ServletRequest request);
+    void deleteFollow(FollowRequest followRequest, String token);
 
-    Object getFollower(ServletRequest request);
+    Object getFollower(String token);
 
-    Object getFollowing(ServletRequest request);
+    Object getFollowing(String token);
 }

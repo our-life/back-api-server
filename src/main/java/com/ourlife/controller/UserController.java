@@ -1,5 +1,6 @@
 package com.ourlife.controller;
 
+import com.ourlife.argumentResolver.ValidateToken;
 import com.ourlife.dto.user.*;
 import com.ourlife.service.UserService;
 import com.ourlife.utils.Impl.JwtTokenUtils;
@@ -34,23 +35,25 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<GetUserInfoResponse> userInfo(HttpServletRequest req) {
-        String token = jwtTokenUtils.resolveToken(req);
+    public ResponseEntity<GetUserInfoResponse> userInfo(@ValidateToken String token) {
         return ResponseEntity.ok(userService.getUserInfo(token));
     }
 
     @PatchMapping("/users")
-    public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequest updateUserRequest, HttpServletRequest req) {
-        String token = jwtTokenUtils.resolveToken(req);
+    public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequest updateUserRequest, @ValidateToken String token) {
         userService.updateUser(token, updateUserRequest);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<Void> deleteUser(HttpServletRequest req) {
-        String token = jwtTokenUtils.resolveToken(req);
+    public ResponseEntity<Void> deleteUser(@ValidateToken String token) {
         userService.deleteUser(token);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/users/lists")
+    public ResponseEntity<?> getUserList(@RequestBody GetUserListRequest userListRequest, @ValidateToken String token) {
+        return ResponseEntity.ok().body(userService.getUserList(userListRequest, token));
     }
 
     @PostMapping("/users/signin")
@@ -60,25 +63,25 @@ public class UserController {
     }
 
     @PostMapping("/users/follow")
-    public ResponseEntity<Void> addFollow(@RequestBody FollowRequest followRequest, ServletRequest request){
-        userService.addFollow(followRequest, request);
+    public ResponseEntity<Void> addFollow(@RequestBody FollowRequest followRequest, @ValidateToken String token) {
+        userService.addFollow(followRequest, token);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @DeleteMapping("/users/follow")
-    public ResponseEntity<Void> deleteFollow(@RequestBody FollowRequest followRequest, ServletRequest request){
-        userService.deleteFollow(followRequest, request);
+    public ResponseEntity<Void> deleteFollow(@RequestBody FollowRequest followRequest, @ValidateToken String token) {
+        userService.deleteFollow(followRequest, token);
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
 
     @GetMapping("/users/follow/follower")
-    public ResponseEntity<?> getFollower(ServletRequest request){
-        return ResponseEntity.ok().body(userService.getFollower(request));
+    public ResponseEntity<?> getFollower(@ValidateToken String token) {
+        return ResponseEntity.ok().body(userService.getFollower(token));
     }
 
     @GetMapping("/users/follow/following")
-    public ResponseEntity<Object> getFollowing(ServletRequest request){
-        return ResponseEntity.ok().body(userService.getFollowing(request));
+    public ResponseEntity<Object> getFollowing(@ValidateToken String token) {
+        return ResponseEntity.ok().body(userService.getFollowing(token));
     }
 }

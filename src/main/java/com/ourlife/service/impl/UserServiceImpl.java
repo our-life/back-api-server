@@ -63,10 +63,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GetUserInfoResponse getUserInfo(String token) {
-        if (!jwtTokenUtils.validateToken(token)) {
-            throw new IllegalStateException("유효하지 않은 토큰입니다.");
-        }
-
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
@@ -77,10 +73,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void updateUser(String token, UpdateUserRequest request) {
-        if (!jwtTokenUtils.validateToken(token)) {
-            throw new IllegalStateException("유효하지 않은 토큰입니다.");
-        }
-
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
@@ -91,22 +83,35 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteUser(String token) {
-        if (!jwtTokenUtils.validateToken(token)) {
-            throw new IllegalStateException("유효하지 않은 토큰입니다.");
-        }
-
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
 
         userRepository.delete(user);
     }
-
-    //@Transactional(rollbackOn = Exception.class)
+    @Transactional
     @Override
-    public void addFollow(FollowRequest followRequest, ServletRequest request) {
+    public List<GetUserListResponse> getUserList(GetUserListRequest userListRequest,  String token) {
+        List<User> userList = userRepository.findByNickname(userListRequest.getUserNickName());
+        List<String> userNickName = new ArrayList<>();
+        List<GetUserListResponse> responseUserList = new ArrayList<>();
 
-        String token = jwtTokenUtils.resolveToken((HttpServletRequest) request);
+        if(userList.isEmpty()){
+            throw new UserNotFoundException("검색한 닉네임의 유저가 없습니다.");
+        }
+        for (User user: userList) {
+           userNickName.add(user.getNickname());
+        }
+        responseUserList.add(GetUserListResponse.response(userNickName));
+
+        return responseUserList;
+    }
+
+
+
+    @Transactional
+    @Override
+    public void addFollow(FollowRequest followRequest, String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
 
         //toUserEmail 과  token userId (from)
@@ -117,8 +122,8 @@ public class UserServiceImpl implements UserService {
         User toUser = userRepository.findByEmail(followRequest.getToUserEmail())
                 .orElseThrow(() -> new UserNotFoundException("상대의 유저의 아이디가 없습니다."));
 
-        boolean validateFollow = validateFollow(fromUser, toUser);
-        if (validateFollow) {
+
+        if (validateFollow(fromUser, toUser)) {
             throw new FollowMissMatchException("이미 팔로우를 하셨습니다");
         }
 
@@ -126,7 +131,7 @@ public class UserServiceImpl implements UserService {
 
         followRepository.save(follow);
     }
-
+    @Transactional
     @Override
     public Boolean validateFollow(User fromUser, User toUser) {
         boolean result = false;
@@ -142,10 +147,9 @@ public class UserServiceImpl implements UserService {
         //Optional 쓴 김에 간결하게 짜면 좋을거 같은데
         return result;
     }
-
+    @Transactional
     @Override
-    public void deleteFollow(FollowRequest followRequest, ServletRequest request) {
-        String token = jwtTokenUtils.resolveToken((HttpServletRequest) request);
+    public void deleteFollow(FollowRequest followRequest, String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
 
         //toUserEmail 과  token userId (from)
@@ -160,10 +164,9 @@ public class UserServiceImpl implements UserService {
 
         followRepository.delete(follow);
     }
-
+    @Transactional
     @Override
-    public Object getFollower(ServletRequest request) {
-        String token = jwtTokenUtils.resolveToken((HttpServletRequest) request);
+    public Object getFollower(String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
 
         User fromUser = userRepository.findById(userId)
@@ -171,35 +174,48 @@ public class UserServiceImpl implements UserService {
 
         //ToUser 로 조회.
         List<Follow> toUserFollowList = followRepository.findAllByToUser(fromUser);
+        List<String> userEmailList = new ArrayList<>();
         List<GetFollowerResponse> getFollowers = new ArrayList<>();
-        HashMap<String, Object> response = new HashMap<>();
-        for (int i = 0; i <toUserFollowList.size() ; i++) {
+ /*       HashMap<String, Object> response = new HashMap<>();
+        for (Follow follow : toUserFollowList) {
             //toUser 의 fromUser 를 조회함
-            getFollowers.add(GetFollowerResponse.followerResponse(toUserFollowList.get(i).getFromUser().getEmail()));
+            getFollowers.add(GetFollowerResponse.followerResponse(follow.getFromUser().getEmail()));
         }
-        response.put("followers", getFollowers);
+        response.put("followers", getFollowers);*/
 
-        return response;
+        for (Follow follow: toUserFollowList) {
+            userEmailList.add(follow.getFromUser().getEmail());
+        }
+
+        getFollowers.add(GetFollowerResponse.followerResponse(userEmailList));
+
+        return getFollowers;
     }
-
+    @Transactional
     @Override
-    public Object getFollowing(ServletRequest request) {
-        String token = jwtTokenUtils.resolveToken((HttpServletRequest) request);
+    public Object getFollowing(String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
 
         User fromUser = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("유저의 아이디가 없습니다."));
 
         List<Follow> followList =  followRepository.findAllByFromUser(fromUser);
-
+        List<String> userEmailList = new ArrayList<>();
         List<GetFollowingResponse> getFollowings = new ArrayList<>();
-        HashMap<String, Object> response = new HashMap<>();
-        for (int i = 0; i <followList.size() ; i++) {
-            getFollowings.add(GetFollowingResponse.followerResponse(followList.get(i).getToUser().getEmail()));
+
+/*        HashMap<String, Object> response = new HashMap<>();
+        for (Follow follow : followList) {
+            getFollowings.add(GetFollowingResponse.followerResponse(follow.getToUser().getEmail()));
+        }*/
+
+        for (Follow follow: followList) {
+            userEmailList.add(follow.getToUser().getEmail());
         }
 
-        response.put("following", getFollowings);
+        getFollowings.add(GetFollowingResponse.followerResponse(userEmailList));
 
-        return response;
+        return getFollowings;
     }
+        //필터, aop, 인터셉터, argument(추천)
+
 }

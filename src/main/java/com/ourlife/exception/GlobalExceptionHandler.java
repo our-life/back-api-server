@@ -33,4 +33,10 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleFollowMissMatchException(FollowMissMatchException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
+
+    @ExceptionHandler(OurLifeNotFoundException.class)
+    public ResponseEntity<?> handleOurLifeNotFoundException(OurLifeNotFoundException e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse(e.getMessage()));
+    }
+
 }

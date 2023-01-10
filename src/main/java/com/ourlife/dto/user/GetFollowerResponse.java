@@ -18,4 +18,11 @@ public class GetFollowerResponse {
         return response;
     }
 
+    public static GetFollowerResponse followerResponse(List<String> email){
+        GetFollowerResponse response = new GetFollowerResponse();
+        response.followerUserEmail = email.toString();
+
+        return response;
+    }
+
 }
