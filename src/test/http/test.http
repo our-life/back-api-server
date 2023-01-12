@@ -1,4 +1,4 @@
-POST localhost:8080/users
+POST ec2-52-194-219-234.ap-northeast-1.compute.amazonaws.com:8080/users
 Content-Type: application/json
 
 {

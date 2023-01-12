@@ -35,14 +35,6 @@ public class OurLifeController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/ourlifes/test")
-    public ResponseEntity<?> create(@RequestPart(name = "request") CreateOurlifeRequest request,
-                                    @RequestPart(name = "file") List<MultipartFile> multipartFiles,
-                                    @ValidateToken String token) {
-        ourLifeService.save(request, multipartFiles, token);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-
     @PatchMapping("/ourlifes")
     public ResponseEntity<?> updateOurLife(@RequestPart(name = "request") UpdateOurlifeRequest request,
                                            @RequestPart(name = "file") List<MultipartFile> multipartFiles,

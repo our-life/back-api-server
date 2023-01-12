@@ -41,12 +41,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void signup(User user) {
+    public UserResponse signup(User user) {
         if (!validateDuplicationEmail(user.getEmail())) {
             throw new DuplicatedEmailException("이메일 중복 확인이 필요합니다.");
         }
 
         userRepository.save(user);
+        UserResponse response = UserResponse.response("성공");
+        return response;
     }
 
     @Override
@@ -72,22 +74,26 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void updateUser(String token, UpdateUserRequest request) {
+    public UserResponse updateUser(String token, UpdateUserRequest request) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
 
         user.update(request);
+        UserResponse response = UserResponse.response("성공");
+        return response;
     }
 
     @Transactional
     @Override
-    public void deleteUser(String token) {
+    public UserResponse deleteUser(String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
 
         userRepository.delete(user);
+        UserResponse response = UserResponse.response("성공");
+        return response;
     }
     @Transactional
     @Override
@@ -111,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void addFollow(FollowRequest followRequest, String token) {
+    public UserResponse addFollow(FollowRequest followRequest, String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
 
         //toUserEmail 과  token userId (from)
@@ -130,6 +136,8 @@ public class UserServiceImpl implements UserService {
         Follow follow = Follow.createFollow(fromUser, toUser);
 
         followRepository.save(follow);
+        UserResponse response = UserResponse.response("성공");
+        return response;
     }
     @Transactional
     @Override
@@ -149,7 +157,7 @@ public class UserServiceImpl implements UserService {
     }
     @Transactional
     @Override
-    public void deleteFollow(FollowRequest followRequest, String token) {
+    public UserResponse deleteFollow(FollowRequest followRequest, String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
 
         //toUserEmail 과  token userId (from)
@@ -163,6 +171,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new FollowMissMatchException("팔로우하지 않았습니다."));
 
         followRepository.delete(follow);
+        UserResponse response = UserResponse.response("성공");
+        return response;
     }
     @Transactional
     @Override
@@ -176,12 +186,6 @@ public class UserServiceImpl implements UserService {
         List<Follow> toUserFollowList = followRepository.findAllByToUser(fromUser);
         List<String> userEmailList = new ArrayList<>();
         List<GetFollowerResponse> getFollowers = new ArrayList<>();
- /*       HashMap<String, Object> response = new HashMap<>();
-        for (Follow follow : toUserFollowList) {
-            //toUser 의 fromUser 를 조회함
-            getFollowers.add(GetFollowerResponse.followerResponse(follow.getFromUser().getEmail()));
-        }
-        response.put("followers", getFollowers);*/
 
         for (Follow follow: toUserFollowList) {
             userEmailList.add(follow.getFromUser().getEmail());
@@ -202,11 +206,6 @@ public class UserServiceImpl implements UserService {
         List<Follow> followList =  followRepository.findAllByFromUser(fromUser);
         List<String> userEmailList = new ArrayList<>();
         List<GetFollowingResponse> getFollowings = new ArrayList<>();
-
-/*        HashMap<String, Object> response = new HashMap<>();
-        for (Follow follow : followList) {
-            getFollowings.add(GetFollowingResponse.followerResponse(follow.getToUser().getEmail()));
-        }*/
 
         for (Follow follow: followList) {
             userEmailList.add(follow.getToUser().getEmail());

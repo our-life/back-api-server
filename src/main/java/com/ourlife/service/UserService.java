@@ -10,23 +10,23 @@ public interface UserService {
 
     boolean validateDuplicationEmail(String email);
 
-    void signup(User user);
+    UserResponse signup(User user);
 
     String signin(SigninRequest signinRequest);
 
     GetUserInfoResponse getUserInfo(String token);
 
-    void updateUser(String token, UpdateUserRequest request);
+    UserResponse updateUser(String token, UpdateUserRequest request);
 
-    void deleteUser(String token);
+    UserResponse deleteUser(String token);
 
     List<GetUserListResponse> getUserList(GetUserListRequest userListRequest, String token);
 
-    void addFollow(FollowRequest followRequest, String token);
+    UserResponse addFollow(FollowRequest followRequest, String token);
 
     Boolean validateFollow(User fromUser, User toUser);
 
-    void deleteFollow(FollowRequest followRequest, String token);
+    UserResponse deleteFollow(FollowRequest followRequest, String token);
 
     Object getFollower(String token);
 

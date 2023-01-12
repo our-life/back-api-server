@@ -156,7 +156,7 @@ public class OurLifeServiceImpl implements OurLifeService {
                 .orElseThrow(() -> new OurLifeNotFoundException("개시글이 없습니다."));
 
         OurlifeLike ourlifeLike = ourlifeLikeRepository.findByOurLifeIdAndUserId(ourLife.getId(), user.getId())
-                .orElseThrow(() -> new OurLifeNotFoundException("좋아요를 하지시 않았습니다."));
+                .orElseThrow(() -> new OurLifeNotFoundException("좋아요를 하지 않았습니다."));
 
         ourlifeLikeRepository.delete(ourlifeLike);
     }
@@ -170,7 +170,7 @@ public class OurLifeServiceImpl implements OurLifeService {
     private User parseJwtToken(String token){
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("유저의 아이디가 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("유효하지 않은 토큰입니다."));
 
         return user;
     }

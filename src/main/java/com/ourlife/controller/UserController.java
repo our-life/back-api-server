@@ -29,9 +29,9 @@ public class UserController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<Void> signup(@RequestBody SignupRequest signupRequest) {
-        userService.signup(signupRequest.toEntity(passwordEncoder));
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<UserResponse> signup(@RequestBody SignupRequest signupRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(userService.signup(signupRequest.toEntity(passwordEncoder)));
     }
 
     @GetMapping("/users")
@@ -40,13 +40,12 @@ public class UserController {
     }
 
     @PatchMapping("/users")
-    public ResponseEntity<Void> updateUser(@RequestBody UpdateUserRequest updateUserRequest, @ValidateToken String token) {
-        userService.updateUser(token, updateUserRequest);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest, @ValidateToken String token) {
+        return ResponseEntity.ok().body(userService.updateUser(token, updateUserRequest));
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<Void> deleteUser(@ValidateToken String token) {
+    public ResponseEntity<UserResponse> deleteUser(@ValidateToken String token) {
         userService.deleteUser(token);
         return ResponseEntity.ok().build();
     }
@@ -63,15 +62,13 @@ public class UserController {
     }
 
     @PostMapping("/users/follow")
-    public ResponseEntity<Void> addFollow(@RequestBody FollowRequest followRequest, @ValidateToken String token) {
-        userService.addFollow(followRequest, token);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<UserResponse> addFollow(@RequestBody FollowRequest followRequest, @ValidateToken String token) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.addFollow(followRequest, token));
     }
 
     @DeleteMapping("/users/follow")
-    public ResponseEntity<Void> deleteFollow(@RequestBody FollowRequest followRequest, @ValidateToken String token) {
-        userService.deleteFollow(followRequest, token);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    public ResponseEntity<UserResponse> deleteFollow(@RequestBody FollowRequest followRequest, @ValidateToken String token) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.deleteFollow(followRequest, token));
     }
 
 

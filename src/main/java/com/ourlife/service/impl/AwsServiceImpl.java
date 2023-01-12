@@ -55,7 +55,7 @@ public class AwsServiceImpl implements AwsService {
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
     }
 
-    public String getFile(String fileName){
+    public String getUrls(String fileName){
         return amazonS3.getUrl(bucket, fileName).toString();
     }
 
