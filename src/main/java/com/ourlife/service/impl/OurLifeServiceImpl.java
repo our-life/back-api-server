@@ -55,7 +55,7 @@ public class OurLifeServiceImpl implements OurLifeService {
 
 
     @Override
-    public void save(CreateOurlifeRequest request, List<MultipartFile> multipartFiles, String token) {
+    public OurlifeResponse save(CreateOurlifeRequest request, List<MultipartFile> multipartFiles, String token) {
         User user = parseJwtToken(token);
         List<String> ImgsName;
         Imgs imgs = null;
@@ -68,13 +68,12 @@ public class OurLifeServiceImpl implements OurLifeService {
         OurLife ourLife = OurLife.createOurlife(request, user, imgs);
         ourlifeRepository.save(ourLife);
 
-
-
+        return OurlifeResponse.response("성공");
     }
 
     //http://localhost:8080/h2-console/
     @Override
-    public void update(UpdateOurlifeRequest request, List<MultipartFile> multipartFiles, String token) {
+    public OurlifeResponse update(UpdateOurlifeRequest request, List<MultipartFile> multipartFiles, String token) {
         User user = parseJwtToken(token);
         Imgs imgs = null;
 
@@ -105,10 +104,11 @@ public class OurLifeServiceImpl implements OurLifeService {
 
         //메서드로 빼보기
 
+        return OurlifeResponse.response("성공");
     }
 
     @Override
-    public void delete(DeleteOurlifeRequest request, String token) {
+    public OurlifeResponse delete(DeleteOurlifeRequest request, String token) {
         User user = parseJwtToken(token);
 
         OurLife ourLife = ourlifeRepository.findById(request.getAraId())
@@ -127,13 +127,13 @@ public class OurLifeServiceImpl implements OurLifeService {
             }
         }
 
-
         ourlifeRepository.delete(ourLife);
 
+        return OurlifeResponse.response("성공");
     }
 
     @Override
-    public void ourlifeLike(OurlifeLikeRequest request, String token) {
+    public OurlifeResponse ourlifeLike(OurlifeLikeRequest request, String token) {
         User user = parseJwtToken(token);
 
         OurLife ourLife = ourlifeRepository.findById(request.getAraId())
@@ -146,10 +146,12 @@ public class OurLifeServiceImpl implements OurLifeService {
         }
 
         ourlifeLikeRepository.save(araLike);
+
+        return OurlifeResponse.response("성공");
     }
 
     @Override
-    public void ourlifeUnLike(OurlifeLikeRequest request, String token) {
+    public OurlifeResponse ourlifeUnLike(OurlifeLikeRequest request, String token) {
         User user = parseJwtToken(token);
 
         OurLife ourLife = ourlifeRepository.findById(request.getAraId())
@@ -159,6 +161,7 @@ public class OurLifeServiceImpl implements OurLifeService {
                 .orElseThrow(() -> new OurLifeNotFoundException("좋아요를 하지 않았습니다."));
 
         ourlifeLikeRepository.delete(ourlifeLike);
+        return OurlifeResponse.response("성공");
     }
 
     //공통 메서드

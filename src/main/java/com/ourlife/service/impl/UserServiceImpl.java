@@ -92,8 +92,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
 
         userRepository.delete(user);
-        UserResponse response = UserResponse.response("성공");
-        return response;
+
+        return UserResponse.response("성공");
     }
     @Transactional
     @Override
@@ -178,9 +178,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Object getFollower(String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
-
         User fromUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("유저의 아이디가 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("유저 정보가 없습니다."));
 
         //ToUser 로 조회.
         List<Follow> toUserFollowList = followRepository.findAllByToUser(fromUser);
@@ -201,7 +200,7 @@ public class UserServiceImpl implements UserService {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
 
         User fromUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException("유저의 아이디가 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("유저 정보가 없습니다."));
 
         List<Follow> followList =  followRepository.findAllByFromUser(fromUser);
         List<String> userEmailList = new ArrayList<>();

@@ -10,17 +10,14 @@ import java.util.List;
 @Builder
 public class GetUserListResponse {
 
-    private String nickname;
+    private List<String> nickname;
 
-    public static GetUserListResponse response(User user){
-        return GetUserListResponse.builder()
-                .nickname(user.getNickname())
-                .build();
-    }
+
     public static GetUserListResponse response(List<String> userNickNameList){
         return GetUserListResponse.builder()
-                .nickname(userNickNameList.toString())
+                .nickname(userNickNameList)
                 .build();
     }
+
 
 }

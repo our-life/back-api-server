@@ -1,10 +1,7 @@
 package com.ourlife.controller;
 
 import com.ourlife.argumentResolver.ValidateToken;
-import com.ourlife.dto.ourlife.CreateOurlifeRequest;
-import com.ourlife.dto.ourlife.DeleteOurlifeRequest;
-import com.ourlife.dto.ourlife.OurlifeLikeRequest;
-import com.ourlife.dto.ourlife.UpdateOurlifeRequest;
+import com.ourlife.dto.ourlife.*;
 import com.ourlife.service.OurLifeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,37 +25,40 @@ public class OurLifeController {
 
 
     @PostMapping("/ourlifes")
-    public ResponseEntity<?> createOurlife(@RequestPart(name = "request") CreateOurlifeRequest request,
-                                           @RequestPart(name = "file") List<MultipartFile> multipartFiles,
-                                           @ValidateToken String token) {
-        ourLifeService.save(request, multipartFiles, token);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<OurlifeResponse> createOurlife(@RequestPart(name = "request") CreateOurlifeRequest request,
+                                                         @RequestPart(name = "file") List<MultipartFile> multipartFiles,
+                                                         @ValidateToken String token) {
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(ourLifeService.save(request, multipartFiles, token));
     }
 
     @PatchMapping("/ourlifes")
-    public ResponseEntity<?> updateOurLife(@RequestPart(name = "request") UpdateOurlifeRequest request,
-                                           @RequestPart(name = "file") List<MultipartFile> multipartFiles,
-                                           @ValidateToken String token) {
-        ourLifeService.update(request, multipartFiles, token);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<OurlifeResponse> updateOurLife(@RequestPart(name = "request") UpdateOurlifeRequest request,
+                                                         @RequestPart(name = "file") List<MultipartFile> multipartFiles,
+                                                         @ValidateToken String token) {
+
+        return ResponseEntity.ok().body(ourLifeService.update(request, multipartFiles, token));
     }
 
     @DeleteMapping("/ourlifes")
-    public ResponseEntity<?> deleteOurLife(@RequestBody DeleteOurlifeRequest deleteOurlifeRequest, @ValidateToken String token) {
-        ourLifeService.delete(deleteOurlifeRequest, token);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<OurlifeResponse> deleteOurLife(@RequestBody DeleteOurlifeRequest deleteOurlifeRequest,
+                                                         @ValidateToken String token) {
+
+        return ResponseEntity.ok().body(ourLifeService.delete(deleteOurlifeRequest, token));
     }
 
     @PostMapping("/ourlifes/likes")
-    public ResponseEntity<?> likeOurLife(@RequestBody OurlifeLikeRequest request, @ValidateToken String token) {
-        ourLifeService.ourlifeLike(request, token);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> likeOurLife(@RequestBody OurlifeLikeRequest request,
+                                         @ValidateToken String token) {
+
+        return ResponseEntity.ok().body(ourLifeService.ourlifeLike(request, token));
     }
 
     @DeleteMapping("/ourlifes/likes")
-    public ResponseEntity<?> unlikeOurLife(@RequestBody OurlifeLikeRequest request, @ValidateToken String token) {
-        ourLifeService.ourlifeUnLike(request, token);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<?> unlikeOurLife(@RequestBody OurlifeLikeRequest request,
+                                           @ValidateToken String token) {
+
+        return ResponseEntity.ok().body(ourLifeService.ourlifeUnLike(request, token));
     }
 
 

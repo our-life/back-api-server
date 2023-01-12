@@ -1,21 +1,10 @@
-POST ec2-52-194-219-234.ap-northeast-1.compute.amazonaws.com:8080/users
-Content-Type: application/json
-
-{
-  "password": "pw",
-  "nickname" : "hwan",
-  "email":"email@naver.com1",
-  "birth":"1999-05-17",
-  "introduce" : "가나다라"
-}
-###
 POST localhost:8080/users
 Content-Type: application/json
 
 {
   "password": "pw",
   "nickname" : "hwan",
-  "email":"email@naver.com2",
+  "email":"email@naver.com",
   "birth":"1999-05-17",
   "introduce" : "가나다라"
 }
@@ -31,11 +20,11 @@ Content-Type: application/json
 
 ###
 POST localhost:8080/users/follow
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE1NjYzLCJleHAiOjE2NzE2MDIwNjN9.Re9ZRW9spDkTRsrzxz-gbAS1SuktwjBG4PHmFsRsQWo
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjczNTE1NTM0LCJleHAiOjE2NzM2MDE5MzR9.tYnuyHQDwLkMUs3cYlwvJ6NsAQdSzA-w6O_8VNq860
 Content-Type: application/json
 
 {
-"toUserEmail":"email@naver.com1"
+"toUserEmail":"email@naver.com"
 }
 ###
 DELETE localhost:8080/users/follow
@@ -46,18 +35,34 @@ Content-Type: application/json
   "toUserEmail":"email@naver.com1"
 }
 ###
-GET localhost:8080/users/follower
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE1NTcxLCJleHAiOjE2NzE2MDE5NzF9.BiGrWsy7PhzLslaVlKjNnpC4r_sWDmAd_3CJWYSnZZ8
+GET localhost:8080/users/follow/follower
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0IiwiaWF0IjoxNjczNTE1MzcxLCJleHAiOjE2NzM2MDE3NzF9.z-Tgfw2GeKdVdjZnHxBSGabTFgjIrtV72Uy-m_D8Vl8
 Content-Type: application/json
 
 {
 
 }
 ###
-GET localhost:8080/users/following
-Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjcxNTE1NTcxLCJleHAiOjE2NzE2MDE5NzF9.BiGrWsy7PhzLslaVlKjNnpC4r_sWDmAd_3CJWYSnZZ8
+GET localhost:8080/users/follow/following
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjczNTE1NzM4LCJleHAiOjE2NzM2MDIxMzh9.EInO3L8kkTeOdOG-H4Ww9KDnr6DKTelI9SI-yfTKYf8
 Content-Type: application/json
 
 {
 
+}
+###
+GET localhost:8080/users/lists
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjczNTE3NDg1LCJleHAiOjE2NzM2MDM4ODV9.nVXQdw1Ke1PjLO-DMU1MNiDlvO1DD-InjzF4GttkQ1U
+Content-Type: application/json
+
+{
+  "userNickName": "yohwan"
+}
+
+###
+DELETE localhost:8080/users
+Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiaWF0IjoxNjczNTE4MDM5LCJleHAiOjE2NzM2MDQ0Mzl9.4oKE65gCyxuqg4gdWokItlkMUbE6hIZf_KbrhhN1s7A
+Content-Type: application/json
+
+{
 }

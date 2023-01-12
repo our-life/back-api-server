@@ -46,8 +46,7 @@ public class UserController {
 
     @DeleteMapping("/users")
     public ResponseEntity<UserResponse> deleteUser(@ValidateToken String token) {
-        userService.deleteUser(token);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(userService.deleteUser(token));
     }
 
     @GetMapping("/users/lists")

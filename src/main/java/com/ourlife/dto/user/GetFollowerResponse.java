@@ -2,25 +2,20 @@ package com.ourlife.dto.user;
 
 
 import com.ourlife.entity.Follow;
+import io.jsonwebtoken.lang.Collections;
 import lombok.Data;
 
-import java.util.List;
+import java.util.*;
 
 @Data
 public class GetFollowerResponse {
 
-    private String followerUserEmail;
+    private List<String> followerUserEmail;
 
-    public static GetFollowerResponse followerResponse(String email){
-        GetFollowerResponse response = new GetFollowerResponse();
-        response.followerUserEmail = email;
-
-        return response;
-    }
 
     public static GetFollowerResponse followerResponse(List<String> email){
         GetFollowerResponse response = new GetFollowerResponse();
-        response.followerUserEmail = email.toString();
+        response.followerUserEmail = email;
 
         return response;
     }
