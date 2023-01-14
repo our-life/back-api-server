@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String signin(SigninRequest signinRequest) {
         User user = userRepository.findByEmail(signinRequest.getEmail())
-                .orElseThrow(() -> new UserNotFoundException("유저의 이메일이 없습니다."));
+                .orElseThrow(() -> new UserNotFoundException("이메일을 확인해주세요."));
 
         if (!passwordEncoder.match(signinRequest.getPassword(), user.getPassword())) {
             throw new UserPasswordMissmatchException("비밀번호를 확인해주세요.");
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
         List<GetUserListResponse> responseUserList = new ArrayList<>();
 
         if(userList.isEmpty()){
-            throw new UserNotFoundException("검색한 닉네임의 유저가 없습니다.");
+            return responseUserList;
         }
         for (User user: userList) {
            userNickName.add(user.getNickname());
@@ -130,7 +130,7 @@ public class UserServiceImpl implements UserService {
 
 
         if (validateFollow(fromUser, toUser)) {
-            throw new FollowMissMatchException("이미 팔로우를 하셨습니다");
+            throw new FollowMissMatchException("이미 팔로잉 하셨습니다");
         }
 
         Follow follow = Follow.createFollow(fromUser, toUser);
