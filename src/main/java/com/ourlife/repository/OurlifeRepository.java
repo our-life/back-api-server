@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface OurlifeRepository extends JpaRepository<OurLife, Long> {
 
-    List<OurLife> findAllById(Long id);
+    List<OurLife> findAllByUserId(Long id);
 }

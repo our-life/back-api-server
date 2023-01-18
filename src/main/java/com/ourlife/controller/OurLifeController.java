@@ -6,6 +6,7 @@ import com.ourlife.service.OurLifeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,16 +15,21 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
+@Tag(name = "아라", description = "아라 관련 api 입니다.")
 @RequiredArgsConstructor
 @RestController
 public class OurLifeController {
 
     private final OurLifeService ourLifeService;
 
-
+    @Operation(summary = "글(리스트) 조회 ", description = "팔로잉 한 유저들의 글을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
+    })
     @GetMapping("/ourlifes")
     public ResponseEntity<?> getOurLife(@ValidateToken String token) {
-        return null;
+        return ResponseEntity.ok().body(ourLifeService.getOurlife(token));
     }
 
     @Operation(summary = "글쓰기 ", description = "글쓰기 입니다.")

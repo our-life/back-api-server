@@ -14,6 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -36,15 +37,30 @@ public class OurLifeServiceImpl implements OurLifeService {
         List<User> followingUserList = new ArrayList<>();
         List<GetOurlifeResponse> responses = new ArrayList<>();
 
+        if(userFollowList.isEmpty()) return responses;
+
         for (Follow item: userFollowList) {
             followingUserList.add(item.getToUser());
         }
         for (User followingUser: followingUserList) {
-            List<OurLife> ourLifeList = ourlifeRepository.findAllById(followingUser.getId());
-            if(ourLifeList.isEmpty()) continue;
-            else{
+            List<OurLife> ourLifeList = ourlifeRepository.findAllByUserId(followingUser.getId());
+            for (OurLife ara: ourLifeList) {
+                int araLikeCounter = CountOurLifeLike(ara);
+                List<String> ImgUrls = new ArrayList<>();
 
+                Imgs imgs = imgsRepository.findByOurLifeId(ara.getId())
+                        .orElseGet(() -> null);
+
+                if(imgs != null){
+                   String[] imgArray = imgs.getImgUrl().split(",");
+                    for (String s: imgArray) {
+                        ImgUrls.add(awsService.getUrls(s));
+                    }
+                }
+
+                responses.add(GetOurlifeResponse.from(ara, ImgUrls, araLikeCounter));
             }
+            // 이미지 url; 좋아요
 
         }
 

@@ -9,4 +9,6 @@ public interface AwsService {
     public List<String> uploadFiles(List<MultipartFile> multipartFiles);
 
     public void deleteFile(String fileName);
+
+    public String getUrls(String fileName);
 }
