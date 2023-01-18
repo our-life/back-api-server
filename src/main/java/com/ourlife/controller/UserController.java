@@ -2,18 +2,13 @@ package com.ourlife.controller;
 
 import com.ourlife.argumentResolver.ValidateToken;
 import com.ourlife.dto.user.*;
-import com.ourlife.entity.User;
 import com.ourlife.service.UserService;
-import com.ourlife.utils.Impl.JwtTokenUtils;
 import com.ourlife.utils.PasswordEncoder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,8 +21,6 @@ public class UserController {
     private final UserService userService;
 
     private final PasswordEncoder passwordEncoder;
-
-    private final JwtTokenUtils jwtTokenUtils;
 
     @Operation(summary = "이메일 중복 검사", description = "이메일 중복 검사입니다.")
     @ApiResponses(value = {

@@ -98,7 +98,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public List<GetUserListResponse> getUserList(GetUserListRequest userListRequest,  String token) {
-        List<User> userList = userRepository.findByNickname(userListRequest.getUserNickName());
+        List<User> userList = userRepository.findByNicknameStartingWith(userListRequest.getUserNickName());
         List<String> userNickName = new ArrayList<>();
         List<GetUserListResponse> responseUserList = new ArrayList<>();
 

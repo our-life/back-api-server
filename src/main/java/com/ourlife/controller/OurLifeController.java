@@ -27,9 +27,19 @@ public class OurLifeController {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
     })
+    @GetMapping("/ourlifes/lists")
+    public ResponseEntity<?> getOurlifes(@ValidateToken String token) {
+        return ResponseEntity.ok().body(ourLifeService.getOurlifes(token));
+    }
+
+    @Operation(summary = "글(하나) 조회 ", description = "글 상세 내용을 조회합니다 (필요할지 몰라서 만들어 놓음).")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
+    })
     @GetMapping("/ourlifes")
-    public ResponseEntity<?> getOurLife(@ValidateToken String token) {
-        return ResponseEntity.ok().body(ourLifeService.getOurlife(token));
+    public ResponseEntity<?> getOurlife(@ValidateToken String token){
+        return null;
     }
 
     @Operation(summary = "글쓰기 ", description = "글쓰기 입니다.")
@@ -45,7 +55,7 @@ public class OurLifeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ourLifeService.save(request, multipartFiles, token));
     }
 
-    @Operation(summary = "글 수정 ", description = "글수정 입니다.")
+    @Operation(summary = "글 수정 ", description = "글수정 (Form-data : request(json) / file 멀티파트파일 )")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),

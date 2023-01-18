@@ -47,6 +47,18 @@ public class OurLife extends BaseEntity {
         return imgs;
     }
 
+/*
+    public static OurLife likeOurlife(OurLife ourLife, OurlifeLike ourlifeLike){
+        ourLife.ourlifeLikes.add(ourlifeLike);
+        addLikes(ourLife, ourlifeLike);
+        return ourLife;
+    }
+    public static OurlifeLike addLikes(OurLife ourLife, OurlifeLike ourlifeLike){
+        ourlifeLike.setOurLife(ourLife);
+        return ourlifeLike;
+    }
+*/
+
     public static OurLife updateOurlife(OurLife ourLife, UpdateOurlifeRequest request) {
         ourLife.contents = request.getContents();
         return ourLife;

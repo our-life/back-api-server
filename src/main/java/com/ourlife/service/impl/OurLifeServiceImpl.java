@@ -30,7 +30,7 @@ public class OurLifeServiceImpl implements OurLifeService {
     private final OurlifeLikeRepository ourlifeLikeRepository;
 
     @Override
-    public List<GetOurlifeResponse> getOurlife(String token) {
+    public List<GetOurlifeResponse> getOurlifes(String token) {
         User user = parseJwtToken(token);
         //팔로잉만
         List<Follow> userFollowList = followRepository.findAllByFromUser(user);
@@ -60,15 +60,17 @@ public class OurLifeServiceImpl implements OurLifeService {
 
                 responses.add(GetOurlifeResponse.from(ara, ImgUrls, araLikeCounter));
             }
-            // 이미지 url; 좋아요
 
         }
-
-        //아라 구해서? 좋아요 굴리고? ?.????? 개오래 걸릴꺼 같은데...?
         return responses;
     }
 
-
+    @Override
+    public GetOurlifeResponse getOurlife(String token) {
+        User user = parseJwtToken(token);
+        
+        return null;
+    }
 
     @Override
     public OurlifeResponse save(CreateOurlifeRequest request, List<MultipartFile> multipartFiles, String token) {

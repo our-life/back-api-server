@@ -13,7 +13,9 @@ public interface OurLifeService {
 
     public OurlifeResponse delete(DeleteOurlifeRequest request, String token);
 
-    public List<GetOurlifeResponse> getOurlife(String token);
+    public List<GetOurlifeResponse> getOurlifes(String token);
+
+    public GetOurlifeResponse getOurlife(String token);
 
     public OurlifeResponse ourlifeLike(OurlifeLikeRequest request, String token);
 
