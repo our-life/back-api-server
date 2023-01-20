@@ -29,8 +29,8 @@ public class OurLife extends BaseEntity {
     List<Imgs> imgsList = new ArrayList<>();
 
     //좋아요 연관관계 생각해보기
-/*    @OneToMany(cascade = CascadeType.ALL)
-    List<OurlifeLike> ourlifeLikes = new ArrayList<>();*/
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    List<OurlifeLike> ourlifeLikes = new ArrayList<>();
 
 
     public static OurLife createOurlife(CreateOurlifeRequest request, User user, Imgs imgs) {
@@ -47,7 +47,6 @@ public class OurLife extends BaseEntity {
         return imgs;
     }
 
-/*
     public static OurLife likeOurlife(OurLife ourLife, OurlifeLike ourlifeLike){
         ourLife.ourlifeLikes.add(ourlifeLike);
         addLikes(ourLife, ourlifeLike);
@@ -57,7 +56,6 @@ public class OurLife extends BaseEntity {
         ourlifeLike.setOurLife(ourLife);
         return ourlifeLike;
     }
-*/
 
     public static OurLife updateOurlife(OurLife ourLife, UpdateOurlifeRequest request) {
         ourLife.contents = request.getContents();

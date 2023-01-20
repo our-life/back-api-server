@@ -21,7 +21,6 @@ public class SignupRequest {
 
     private LocalDate birth;
 
-    private String introduce;
 
     public User toEntity(PasswordEncoder passwordEncoder) {
         return User.builder()
@@ -29,7 +28,6 @@ public class SignupRequest {
                 .nickname(nickname)
                 .email(email)
                 .birth(birth)
-                .introduce(introduce)
                 .build();
     }
 }

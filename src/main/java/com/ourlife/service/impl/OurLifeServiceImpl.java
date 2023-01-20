@@ -163,7 +163,7 @@ public class OurLifeServiceImpl implements OurLifeService {
             throw new OurLifeNotFoundException("이미 좋아요를 누르셨습니다.");
         }
 
-        ourlifeLikeRepository.save(araLike);
+        ourlifeRepository.save(OurLife.likeOurlife(ourLife, araLike));
 
         return OurlifeResponse.response("성공");
     }
@@ -178,7 +178,10 @@ public class OurLifeServiceImpl implements OurLifeService {
         OurlifeLike ourlifeLike = ourlifeLikeRepository.findByOurLifeIdAndUserId(ourLife.getId(), user.getId())
                 .orElseThrow(() -> new OurLifeNotFoundException("좋아요를 하지 않았습니다."));
 
-        ourlifeLikeRepository.delete(ourlifeLike);
+        ourLife.getOurlifeLikes().remove(ourlifeLike);
+
+        ourlifeRepository.save(ourLife);
+        /*ourlifeLikeRepository.delete(ourlifeLike);*/
         return OurlifeResponse.response("성공");
     }
 
@@ -196,19 +199,3 @@ public class OurLifeServiceImpl implements OurLifeService {
         return user;
     }
 }
-
-
-/*    @Override
-    public void save(CreateOurlifeRequest request, List<MultipartFile> multipartFiles, String token) {
-        User user = parseJwtToken(token);
-
-        OurLife ourLife = OurLife.createOurlife(request, user);
-        ourlifeRepository.save(ourLife);
-        List<String> ImgsName;
-
-        if(multipartFiles.get(0).getSize() != 0){
-            ImgsName = awsService.uploadFiles(multipartFiles);
-            imgsRepository.save(Imgs.createImgs(ourLife, ImgsName));
-        }
-
-    }*/
