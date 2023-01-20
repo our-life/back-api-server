@@ -26,9 +26,6 @@ public class Imgs {
 
     private String imgUrl;
 
-    //List<MultiPartFile> 인데... 여기도 리스트로 만들어야 되는거 아닐까
-    //private List<String> imgUrl = new ArrayList<>();
-
     public static Imgs createImgs(OurLife ourLife, List<String> fileName){
         Imgs imgs = new Imgs();
         imgs.ourLife = ourLife;

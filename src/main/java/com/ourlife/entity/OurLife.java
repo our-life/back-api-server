@@ -28,7 +28,6 @@ public class OurLife extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL)
     List<Imgs> imgsList = new ArrayList<>();
 
-    //좋아요 연관관계 생각해보기
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     List<OurlifeLike> ourlifeLikes = new ArrayList<>();
 
