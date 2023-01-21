@@ -31,6 +31,9 @@ public class OurLife extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     List<OurlifeLike> ourlifeLikes = new ArrayList<>();
 
+    @OneToMany(cascade = CascadeType.ALL)
+    List<Comment> commentList = new ArrayList<>();
+
 
     public static OurLife createOurlife(CreateOurlifeRequest request, User user, Imgs imgs) {
         OurLife ourLife = new OurLife();
@@ -55,6 +58,14 @@ public class OurLife extends BaseEntity {
         ourlifeLike.setOurLife(ourLife);
         return ourlifeLike;
     }
+
+
+    public static OurLife commentOurlife(OurLife ourLife, Comment comment){
+        ourLife.commentList.add(comment);
+
+        return ourLife;
+    }
+
 
     public static OurLife updateOurlife(OurLife ourLife, UpdateOurlifeRequest request) {
         ourLife.contents = request.getContents();

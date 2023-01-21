@@ -1,12 +1,11 @@
 package com.ourlife.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Comment extends BaseEntity{
 
@@ -25,13 +24,17 @@ public class Comment extends BaseEntity{
     private String contents;
 
 
-    //TODO: createComment DTO 만들어서 추가
-    private static Comment createComment(User user, OurLife ourLife){
+
+    public static Comment createComment(User user, OurLife ourLife, String contents){
         Comment comment = new Comment();
         comment.user = user;
         comment.ourLife = ourLife;
-
-        return null;
+        comment.contents = contents;
+        return comment;
     }
 
+    public static Comment updateCommnet(Comment comment, String contents){
+        comment.contents = contents;
+        return comment;
+    }
 }
