@@ -3,15 +3,12 @@ package com.ourlife.controller;
 import com.ourlife.argumentResolver.ValidateToken;
 import com.ourlife.dto.comment.CommentResponse;
 import com.ourlife.dto.comment.CreateCommentRequest;
+import com.ourlife.dto.comment.DeleteCommentRequest;
 import com.ourlife.dto.comment.UpdateCommentRequest;
-import com.ourlife.entity.Comment;
 import com.ourlife.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -31,4 +28,11 @@ public class CommentController {
                                                          @ValidateToken String token){
         return ResponseEntity.ok().body(commentService.updataComment(request, token));
     }
+
+    @DeleteMapping("/comments")
+    public ResponseEntity<CommentResponse> deleteComment(@RequestBody DeleteCommentRequest request,
+                                                         @ValidateToken String token){
+        return ResponseEntity.ok().body(commentService.deleteComment(request, token));
+    }
+
 }

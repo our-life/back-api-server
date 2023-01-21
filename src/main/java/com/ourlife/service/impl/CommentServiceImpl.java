@@ -2,6 +2,7 @@ package com.ourlife.service.impl;
 
 import com.ourlife.dto.comment.CommentResponse;
 import com.ourlife.dto.comment.CreateCommentRequest;
+import com.ourlife.dto.comment.DeleteCommentRequest;
 import com.ourlife.dto.comment.UpdateCommentRequest;
 import com.ourlife.entity.Comment;
 import com.ourlife.entity.OurLife;
@@ -25,12 +26,14 @@ public class CommentServiceImpl implements CommentService {
     private final OurlifeRepository ourlifeRepository;
     private final CommentRepository commentRepository;
 
+    //http://localhost:8080/h2-console/
+
     @Override
     public CommentResponse createComment(CreateCommentRequest request, String token) {
         User user = parseJwtToken(token);
 
         OurLife ourLife = ourlifeRepository.findById(request.getAraId())
-                .orElseThrow(() -> new OurLifeNotFoundException("글이 없습니다"));
+                .orElseThrow(() -> new OurLifeNotFoundException("해당 글이 없습니다"));
 
         Comment comment = Comment.createComment(user, ourLife, request.getContents());
 
@@ -54,6 +57,23 @@ public class CommentServiceImpl implements CommentService {
 
         Comment.updateCommnet(comment, request.getContents());
         ourlifeRepository.save(OurLife.commentOurlife(ourLife, comment));
+
+        return CommentResponse.response("성공");
+    }
+
+    @Override
+    public CommentResponse deleteComment(DeleteCommentRequest request, String token) {
+        User user = parseJwtToken(token);
+
+        OurLife ourLife = ourlifeRepository.findById(request.getAraId())
+                .orElseThrow(() -> new OurLifeNotFoundException("해당 글이 없습니다"));
+
+        Comment comment = commentRepository.findCommentByOurLifeIdAndId(ourLife.getId(), request.getCommentId());
+
+        if(!user.getId().equals(comment.getUser().getId())) throw new UserNotFoundException("본인의 댓글이 아닙니다");
+
+        ourLife.getCommentList().remove(comment);
+        ourlifeRepository.save(ourLife);
 
         return CommentResponse.response("성공");
     }

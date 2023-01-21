@@ -31,7 +31,7 @@ public class OurLife extends BaseEntity {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     List<OurlifeLike> ourlifeLikes = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     List<Comment> commentList = new ArrayList<>();
 
 
