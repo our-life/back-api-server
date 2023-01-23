@@ -38,8 +38,9 @@ public class OurLifeController {
             @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
     })
     @GetMapping("/ourlifes")
-    public ResponseEntity<?> getOurlife(@ValidateToken String token){
-        return null;
+    public ResponseEntity<?> getOurlife(@RequestBody GetOurlifeRequest request,
+                                        @ValidateToken String token){
+        return ResponseEntity.ok().body(ourLifeService.getOurlife(request, token));
     }
 
     @Operation(summary = "글쓰기 ", description = "글쓰기 입니다.")
@@ -108,6 +109,18 @@ public class OurLifeController {
                                            @ValidateToken String token) {
 
         return ResponseEntity.ok().body(ourLifeService.ourlifeUnLike(request, token));
+    }
+
+    @Operation(summary = "좋아요를 누른 사람들의 닉네임 리스트 조회", description = "ㅁㄴㅇㄹ")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "성공"),
+            @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
+            @ApiResponse(responseCode = "404", description = "글이 없습니다")
+    })
+    @GetMapping("/ourlifes/likes/lists")
+    public ResponseEntity<?> ListToOurlifeLike(@RequestBody GetOurlifeRequest request,
+                                               @ValidateToken String token){
+        return ResponseEntity.ok().body(ourLifeService.getOurlifeLike(request, token));
     }
 
 

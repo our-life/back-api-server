@@ -5,6 +5,7 @@ import com.ourlife.entity.OurlifeLike;
 import com.ourlife.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface OurlifeLikeRepository extends JpaRepository<OurlifeLike, Long> {
@@ -14,5 +15,7 @@ public interface OurlifeLikeRepository extends JpaRepository<OurlifeLike, Long> 
     Optional<OurlifeLike> findByOurLifeIdAndUserId(Long ourlifeId, Long userId);
 
     int countByOurLifeId(Long ourlifeId);
+
+    List<OurlifeLike> findByOurLifeId(Long araId);
 
 }

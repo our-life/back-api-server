@@ -37,23 +37,23 @@ public class OurLifeServiceImpl implements OurLifeService {
         List<User> followingUserList = new ArrayList<>();
         List<GetOurlifeResponse> responses = new ArrayList<>();
 
-        if(userFollowList.isEmpty()) return responses;
+        if (userFollowList.isEmpty()) return responses;
 
-        for (Follow item: userFollowList) {
+        for (Follow item : userFollowList) {
             followingUserList.add(item.getToUser());
         }
-        for (User followingUser: followingUserList) {
+        for (User followingUser : followingUserList) {
             List<OurLife> ourLifeList = ourlifeRepository.findAllByUserId(followingUser.getId());
-            for (OurLife ara: ourLifeList) {
+            for (OurLife ara : ourLifeList) {
                 int araLikeCounter = CountOurLifeLike(ara);
                 List<String> ImgUrls = new ArrayList<>();
 
                 Imgs imgs = imgsRepository.findByOurLifeId(ara.getId())
                         .orElseGet(() -> null);
 
-                if(imgs != null){
-                   String[] imgArray = imgs.getImgUrl().split(",");
-                    for (String s: imgArray) {
+                if (imgs != null) {
+                    String[] imgArray = imgs.getImgUrl().split(",");
+                    for (String s : imgArray) {
                         ImgUrls.add(awsService.getUrls(s));
                     }
                 }
@@ -66,10 +66,26 @@ public class OurLifeServiceImpl implements OurLifeService {
     }
 
     @Override
-    public GetOurlifeResponse getOurlife(String token) {
+    public GetOurlifeResponse getOurlife(GetOurlifeRequest request, String token) {
         User user = parseJwtToken(token);
-        
-        return null;
+
+        OurLife ourLife = ourlifeRepository.findById(request.getAraId())
+                .orElseThrow(() -> new OurLifeNotFoundException("해당 글이 없습니다."));
+
+        Imgs imgs = imgsRepository.findByOurLifeId(ourLife.getId())
+                .orElseThrow(() -> null);
+
+        List<String> imgUrls = new ArrayList<>();
+        if (imgs != null) {
+            String[] url = imgs.getImgUrl().split(",");
+            for (String a : url) {
+                imgUrls.add(awsService.getUrls(a));
+            }
+        }
+
+        int likeCount = CountOurLifeLike(ourLife);
+
+        return GetOurlifeResponse.from(ourLife, imgUrls, likeCount);
     }
 
     @Override
@@ -78,9 +94,9 @@ public class OurLifeServiceImpl implements OurLifeService {
         List<String> ImgsName;
         Imgs imgs = null;
 
-        if(multipartFiles.get(0).getSize() != 0){
+        if (multipartFiles.get(0).getSize() != 0) {
             ImgsName = awsService.uploadFiles(multipartFiles);
-            imgs= Imgs.createImgs1(ImgsName);
+            imgs = Imgs.createImgs1(ImgsName);
         }
 
         OurLife ourLife = OurLife.createOurlife(request, user, imgs);
@@ -98,17 +114,17 @@ public class OurLifeServiceImpl implements OurLifeService {
         OurLife ourLife = ourlifeRepository.findById(request.getAraId())
                 .orElseThrow(() -> new OurLifeNotFoundException("개시글이 없습니다."));
 
-        if(!user.getId().equals(ourLife.getUser().getId())){
+        if (!user.getId().equals(ourLife.getUser().getId())) {
             throw new UserNotFoundException("해당 유저의 글이 아닙니다.");
         }
 
 
-        if(multipartFiles.get(0).getSize() != 0){
+        if (multipartFiles.get(0).getSize() != 0) {
             Imgs repoImgs = imgsRepository.findByOurLifeId(ourLife.getId())
                     .orElseThrow(() -> new OurLifeNotFoundException("이미지가 존재하지 않습니다."));
             // 오류 수정필요
             String[] imgUrl = repoImgs.getImgUrl().split(",");
-            for (String img: imgUrl) {
+            for (String img : imgUrl) {
                 awsService.deleteFile(img);
             }
             List<String> ImgsName;
@@ -132,15 +148,15 @@ public class OurLifeServiceImpl implements OurLifeService {
         OurLife ourLife = ourlifeRepository.findById(request.getAraId())
                 .orElseThrow(() -> new OurLifeNotFoundException("개시글이 없습니다."));
 
-        if(!user.getId().equals(ourLife.getUser().getId())){
+        if (!user.getId().equals(ourLife.getUser().getId())) {
             throw new UserNotFoundException("해당 유저의 글이 아닙니다.");
         }
 
         Imgs imgs = imgsRepository.findByOurLifeId(ourLife.getId())
                 .orElseGet(() -> null);
-        if(imgs != null){
+        if (imgs != null) {
             String[] imgUrl = imgs.getImgUrl().split(",");
-            for (String url: imgUrl) {
+            for (String url : imgUrl) {
                 awsService.deleteFile(url);
             }
         }
@@ -159,7 +175,7 @@ public class OurLifeServiceImpl implements OurLifeService {
 
         OurlifeLike araLike = OurlifeLike.createAraLike(user, ourLife);
 
-        if(ourlifeLikeRepository.existsByOurLifeIdAndUserId(ourLife.getId(), user.getId())){
+        if (ourlifeLikeRepository.existsByOurLifeIdAndUserId(ourLife.getId(), user.getId())) {
             throw new OurLifeNotFoundException("이미 좋아요를 누르셨습니다.");
         }
 
@@ -185,13 +201,30 @@ public class OurLifeServiceImpl implements OurLifeService {
         return OurlifeResponse.response("성공");
     }
 
+    @Override
+    public GetOurlifeLikeResponse getOurlifeLike(GetOurlifeRequest request, String token) {
+        User user = parseJwtToken(token);
+
+        OurLife ourLife = ourlifeRepository.findById(request.getAraId())
+                .orElseThrow(() -> new OurLifeNotFoundException("해당 글이 없습니다."));
+
+        List<OurlifeLike> userNickname = ourlifeLikeRepository.findByOurLifeId(ourLife.getId());
+        List<String> nicknameList = new ArrayList<>();
+
+        for (OurlifeLike likes : userNickname) {
+            nicknameList.add(likes.getUser().getNickname());
+        }
+
+        return GetOurlifeLikeResponse.makeList(nicknameList);
+    }
+
     //공통 메서드
 
-    private int CountOurLifeLike(OurLife ourLife){
+    private int CountOurLifeLike(OurLife ourLife) {
         return ourlifeLikeRepository.countByOurLifeId(ourLife.getId());
     }
 
-    private User parseJwtToken(String token){
+    private User parseJwtToken(String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("유효하지 않은 토큰입니다."));

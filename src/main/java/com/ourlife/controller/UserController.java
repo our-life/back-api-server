@@ -88,7 +88,7 @@ public class UserController {
         return ResponseEntity.ok().body(userService.deleteUser(token));
     }
 
-    @Operation(summary = "유저 검색 (검색창에 리스트 띄움)", description = "유저 검색 입니다.")
+    @Operation(summary = "유저 검색 (검색창에 리스트 띄움)", description = "ex) "+ "'hw' 검색 시"+ " 'hwan, hwanE, hwannnanana' ... 나옴")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "성공"),
             @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰")

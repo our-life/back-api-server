@@ -15,11 +15,13 @@ public interface OurLifeService {
 
     public List<GetOurlifeResponse> getOurlifes(String token);
 
-    public GetOurlifeResponse getOurlife(String token);
+    public GetOurlifeResponse getOurlife(GetOurlifeRequest request, String token);
 
     public OurlifeResponse ourlifeLike(OurlifeLikeRequest request, String token);
 
     public OurlifeResponse ourlifeUnLike(OurlifeLikeRequest request, String token);
+
+    public GetOurlifeLikeResponse getOurlifeLike(GetOurlifeRequest request, String token);
 
 
 }
