@@ -1,10 +1,7 @@
 package com.ourlife.controller;
 
 import com.ourlife.argumentResolver.ValidateToken;
-import com.ourlife.dto.comment.CommentResponse;
-import com.ourlife.dto.comment.CreateCommentRequest;
-import com.ourlife.dto.comment.DeleteCommentRequest;
-import com.ourlife.dto.comment.UpdateCommentRequest;
+import com.ourlife.dto.comment.*;
 import com.ourlife.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -25,14 +22,26 @@ public class CommentController {
 
     @PatchMapping("/comments")
     public ResponseEntity<CommentResponse> updateComment(@RequestBody UpdateCommentRequest request,
-                                                         @ValidateToken String token){
+                                                         @ValidateToken String token) {
         return ResponseEntity.ok().body(commentService.updataComment(request, token));
     }
 
     @DeleteMapping("/comments")
     public ResponseEntity<CommentResponse> deleteComment(@RequestBody DeleteCommentRequest request,
-                                                         @ValidateToken String token){
+                                                         @ValidateToken String token) {
         return ResponseEntity.ok().body(commentService.deleteComment(request, token));
+    }
+
+    @PostMapping("/comments/likes")
+    public ResponseEntity<CommentResponse> likeComment(@RequestBody LikeCommentRequest request,
+                                                       @ValidateToken String token) {
+        return ResponseEntity.ok().body(commentService.likeComment(request, token));
+    }
+
+    @DeleteMapping("/comments/likes")
+    public ResponseEntity<CommentResponse> unlikeComment(@RequestBody LikeCommentRequest request,
+                                                         @ValidateToken String token){
+        return ResponseEntity.ok().body(commentService.unlikeComment(request, token));
     }
 
 }

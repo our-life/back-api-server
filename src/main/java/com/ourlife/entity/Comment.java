@@ -3,6 +3,9 @@ package com.ourlife.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -23,6 +26,8 @@ public class Comment extends BaseEntity{
     @Column(name = "commentContents")
     private String contents;
 
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    List<CommentLike> commentLikes = new ArrayList<>();
 
 
     public static Comment createComment(User user, OurLife ourLife, String contents){
@@ -35,6 +40,11 @@ public class Comment extends BaseEntity{
 
     public static Comment updateCommnet(Comment comment, String contents){
         comment.contents = contents;
+        return comment;
+    }
+
+    public static Comment commentAddLike(Comment comment, CommentLike commentLike){
+        comment.commentLikes.add(commentLike);
         return comment;
     }
 }

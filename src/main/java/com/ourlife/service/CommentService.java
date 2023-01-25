@@ -1,9 +1,6 @@
 package com.ourlife.service;
 
-import com.ourlife.dto.comment.CommentResponse;
-import com.ourlife.dto.comment.CreateCommentRequest;
-import com.ourlife.dto.comment.DeleteCommentRequest;
-import com.ourlife.dto.comment.UpdateCommentRequest;
+import com.ourlife.dto.comment.*;
 
 public interface CommentService {
 
@@ -12,5 +9,9 @@ public interface CommentService {
     public CommentResponse updataComment(UpdateCommentRequest request, String token);
 
     public CommentResponse deleteComment(DeleteCommentRequest request, String token);
+
+    public CommentResponse likeComment(LikeCommentRequest request, String token);
+
+    public CommentResponse unlikeComment(LikeCommentRequest request, String token);
 
 }
