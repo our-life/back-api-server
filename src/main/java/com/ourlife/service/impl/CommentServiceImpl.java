@@ -17,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.webjars.NotFoundException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
@@ -28,6 +31,27 @@ public class CommentServiceImpl implements CommentService {
     private final CommentLikeRepository commentLikeRepository;
 
     //http://localhost:8080/h2-console/
+
+
+    @Override
+    public List<GetCommentListResponse> getCommentList(GetCommentListRequest request, String token) {
+        User user = parseJwtToken(token);
+
+        OurLife ourLife = ourlifeRepository.findById(request.getAraId())
+                .orElseThrow(() -> new OurLifeNotFoundException("해당 글이 없습니다"));
+
+        List<Comment> comments = commentRepository.findByOurLifeId(ourLife.getId());
+        List<GetCommentListResponse> responses = new ArrayList<>();
+
+        if(comments.isEmpty()) return null;
+
+        for (Comment comment : comments) {
+            int likeCount = commentLikeRepository.countByCommentId(comment.getId());
+            responses.add(GetCommentListResponse.from(user, comment, likeCount));
+        }
+
+        return responses;
+    }
 
     @Override
     public CommentResponse createComment(CreateCommentRequest request, String token) {
@@ -48,7 +72,7 @@ public class CommentServiceImpl implements CommentService {
         User user = parseJwtToken(token);
 
         Comment comment = commentRepository.findByOurLifeIdAndId(request.getAraId(), request.getCommentId())
-                .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new OurLifeNotFoundException("댓글을 찾을 수 없습니다."));
 
         if (!user.getId().equals(comment.getUser().getId())) throw new UserNotFoundException("본인의 댓글이 아닙니다");
 
@@ -71,7 +95,7 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new OurLifeNotFoundException("해당 글이 없습니다"));
 
         Comment comment = commentRepository.findByOurLifeIdAndId(ourLife.getId(), request.getCommentId())
-                .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new OurLifeNotFoundException("댓글을 찾을 수 없습니다."));
 
         if(!user.getId().equals(comment.getUser().getId())) throw new UserNotFoundException("본인의 댓글이 아닙니다");
 
@@ -89,10 +113,10 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new OurLifeNotFoundException("해당 글이 없습니다"));
 
         Comment comment = commentRepository.findByOurLifeIdAndId(request.getAraId(), request.getCommentId())
-                .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new OurLifeNotFoundException("댓글을 찾을 수 없습니다."));
 
         if(commentLikeRepository.existsByCommentIdAndUserId(user.getId(), comment.getId())){
-            throw new NotFoundException("이미 좋아요를 누르셨습니다.");
+            throw new OurLifeNotFoundException("이미 좋아요를 누르셨습니다.");
         }
 
         CommentLike commentLike = CommentLike.createCommentLike(user, comment);
@@ -110,10 +134,10 @@ public class CommentServiceImpl implements CommentService {
                 .orElseThrow(() -> new OurLifeNotFoundException("해당 글이 없습니다"));
 
         Comment comment = commentRepository.findByOurLifeIdAndId(request.getAraId(), request.getCommentId())
-                .orElseThrow(() -> new NotFoundException("댓글을 찾을 수 없습니다."));
+                .orElseThrow(() -> new OurLifeNotFoundException("댓글을 찾을 수 없습니다."));
 
         CommentLike commentLike = commentLikeRepository.findByCommentIdAndUserId(comment.getId(), user.getId())
-                .orElseThrow(() -> new NotFoundException("좋아요를 누르시지 않았습니다"));
+                .orElseThrow(() -> new OurLifeNotFoundException("좋아요를 누르시지 않았습니다"));
 
         comment.getCommentLikes().remove(commentLike);
 

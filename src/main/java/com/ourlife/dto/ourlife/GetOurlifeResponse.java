@@ -1,8 +1,6 @@
 package com.ourlife.dto.ourlife;
 
-import com.ourlife.dto.user.GetUserInfoResponse;
 import com.ourlife.entity.OurLife;
-import com.ourlife.entity.User;
 import lombok.*;
 
 import java.util.List;

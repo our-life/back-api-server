@@ -7,11 +7,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RestController
 public class CommentController {
 
     private final CommentService commentService;
+
+    @GetMapping("/comments")
+    public ResponseEntity<List<GetCommentListResponse>> getCommentList(@RequestBody GetCommentListRequest request,
+                                                                       @ValidateToken String token){
+        return ResponseEntity.ok().body(commentService.getCommentList(request, token));
+    }
+
 
     @PostMapping("/comments")
     public ResponseEntity<CommentResponse> createComment(@RequestBody CreateCommentRequest request,
