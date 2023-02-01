@@ -53,9 +53,10 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "이메일을 확인해주세요")
     })
     @PostMapping("/users/signin")
-    public ResponseEntity<Void> signin(@RequestBody SigninRequest signinRequest) {
+    public ResponseEntity<?> signin(@RequestBody SigninRequest signinRequest) {
         return ResponseEntity.ok()
-                .header("Authorization", "Bearer " + userService.signin(signinRequest)).build();
+                .header("Authorization", "Bearer " + userService.signin(signinRequest))
+                .body(UserResponse.response("성공"));
     }
 
     @Operation(summary = "유저 정보 조회", description = "유저정보 입니다.")
