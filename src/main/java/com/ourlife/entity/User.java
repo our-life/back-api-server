@@ -25,7 +25,7 @@ public class User extends BaseEntity{
     @Column(unique = true)
     private String email;
 
-    private LocalDate birth;
+    private String birth;
 
     private String introduce;
 

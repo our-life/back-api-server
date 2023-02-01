@@ -19,7 +19,7 @@ public class SignupRequest {
 
     private String email;
 
-    private LocalDate birth;
+    private String birth;
 
 
     public User toEntity(PasswordEncoder passwordEncoder) {

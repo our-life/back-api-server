@@ -16,7 +16,7 @@ public class UpdateUserRequest {
 
     private String email;
 
-    private LocalDate birth;
+    private String birth;
 
     private String introduce;
 }

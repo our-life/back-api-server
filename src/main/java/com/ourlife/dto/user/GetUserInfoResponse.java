@@ -22,7 +22,7 @@ public class GetUserInfoResponse {
     @Column(unique = true)
     private String email;
 
-    private LocalDate birth;
+    private String birth;
 
     private String introduce;
 
