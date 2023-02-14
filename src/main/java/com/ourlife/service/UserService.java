@@ -2,7 +2,6 @@ package com.ourlife.service;
 
 import com.ourlife.dto.user.*;
 import com.ourlife.entity.User;
-import jakarta.servlet.ServletRequest;
 
 import java.util.List;
 
@@ -10,23 +9,23 @@ public interface UserService {
 
     boolean validateDuplicationEmail(String email);
 
-    UserResponse signup(User user);
+    UserWithInfoResponse signup(User user);
 
-    String signin(SigninRequest signinRequest);
+    Object[] signin(SigninRequest signinRequest);
 
     GetUserInfoResponse getUserInfo(String token);
 
-    UserResponse updateUser(String token, UpdateUserRequest request);
+    UserWithInfoResponse updateUser(String token, UpdateUserRequest request);
 
-    UserResponse deleteUser(String token);
+    UserWithInfoResponse deleteUser(String token);
 
     List<GetUserListResponse> getUserList(GetUserListRequest userListRequest, String token);
 
-    UserResponse addFollow(FollowRequest followRequest, String token);
+    UserWithInfoResponse addFollow(FollowRequest followRequest, String token);
 
     Boolean validateFollow(User fromUser, User toUser);
 
-    UserResponse deleteFollow(FollowRequest followRequest, String token);
+    UserWithInfoResponse deleteFollow(FollowRequest followRequest, String token);
 
     Object getFollower(String token);
 

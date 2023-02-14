@@ -30,6 +30,33 @@ public class OurLifeServiceImpl implements OurLifeService {
     private final OurlifeLikeRepository ourlifeLikeRepository;
 
     @Override
+    public List<GetOurlifeResponse> getMyOurlifes(String token) {
+        User user = parseJwtToken(token);
+
+        List<OurLife> ourLifeList = ourlifeRepository.findAllByUserId(user.getId());
+        List<GetOurlifeResponse> responses = new ArrayList<>();
+
+        for (OurLife ara : ourLifeList) {
+            int araLikeCounter = CountOurLifeLike(ara);
+            List<String> ImgUrls = new ArrayList<>();
+
+            Imgs imgs = imgsRepository.findByOurLifeId(ara.getId())
+                    .orElseGet(() -> null);
+
+            if (imgs != null) {
+                String[] imgArray = imgs.getImgUrl().split(",");
+                for (String s : imgArray) {
+                    ImgUrls.add(awsService.getUrls(s));
+                }
+            }
+
+            responses.add(GetOurlifeResponse.from(ara, ImgUrls, araLikeCounter));
+        }
+
+        return responses;
+    }
+
+    @Override
     public List<GetOurlifeResponse> getOurlifes(String token) {
         User user = parseJwtToken(token);
         //팔로잉만

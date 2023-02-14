@@ -18,7 +18,7 @@ public class Fixture {
                 .email("test@test.com")
                 .introduce("자기소개 테스트")
                 .nickname("test")
-                .birth(LocalDate.now())
+                .birth("19990517")
                 .build();
     }
 
@@ -29,7 +29,17 @@ public class Fixture {
                 .nickname("test")
                 .profileImgUrl("테스트url")
                 .password("testPassword")
-                .birth(LocalDate.now())
+                .birth("19990517")
+                .build();
+    }
+    public static User user1() {
+        return User.builder()
+                .email("testHwan@test.com")
+                .introduce("자기소개 테스트asd")
+                .nickname("testHwan")
+                .profileImgUrl("테스트url")
+                .password("testPassword")
+                .birth("19990517")
                 .build();
     }
 
@@ -38,10 +48,10 @@ public class Fixture {
                 .id(userId)
                 .email("test@test.com")
                 .introduce("자기소개 테스트")
-                .nickname("test")
+                .nickname("test123")
                 .profileImgUrl("테스트url")
                 .password("testPassword")
-                .birth(LocalDate.now())
+                .birth("19990517")
                 .build();
     }
 
@@ -50,8 +60,7 @@ public class Fixture {
                 .password("1234")
                 .nickname("test")
                 .email("test@test.com")
-                .birth(LocalDate.now())
-                .introduce("테스트자기소개")
+                .birth("19990517")
                 .build();
     }
 

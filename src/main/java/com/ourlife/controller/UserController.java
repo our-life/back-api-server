@@ -2,6 +2,7 @@ package com.ourlife.controller;
 
 import com.ourlife.argumentResolver.ValidateToken;
 import com.ourlife.dto.user.*;
+import com.ourlife.entity.User;
 import com.ourlife.service.UserService;
 import com.ourlife.utils.PasswordEncoder;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +42,7 @@ public class UserController {
             @ApiResponse(responseCode = "409", description = "이메일 중복 확인 필요")
     })
     @PostMapping("/users")
-    public ResponseEntity<UserResponse> signup(@RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<UserWithInfoResponse> signup(@RequestBody SignupRequest signupRequest) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(userService.signup(signupRequest.toEntity(passwordEncoder)));
     }
@@ -54,9 +55,10 @@ public class UserController {
     })
     @PostMapping("/users/signin")
     public ResponseEntity<?> signin(@RequestBody SigninRequest signinRequest) {
+        Object[] responses = userService.signin(signinRequest);
         return ResponseEntity.ok()
-                .header("Authorization", "Bearer " + userService.signin(signinRequest))
-                .body(UserResponse.response("성공"));
+                .header("Authorization", "Bearer " + responses[0])
+                .body(UserWithInfoResponse.response("성공", (User) responses[1]));
     }
 
     @Operation(summary = "유저 정보 조회", description = "유저정보 입니다.")
@@ -75,7 +77,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
     })
     @PatchMapping("/users")
-    public ResponseEntity<UserResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest, @ValidateToken String token) {
+    public ResponseEntity<UserWithInfoResponse> updateUser(@RequestBody UpdateUserRequest updateUserRequest, @ValidateToken String token) {
         return ResponseEntity.ok().body(userService.updateUser(token, updateUserRequest));
     }
 
@@ -85,7 +87,7 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
     })
     @DeleteMapping("/users")
-    public ResponseEntity<UserResponse> deleteUser(@ValidateToken String token) {
+    public ResponseEntity<UserWithInfoResponse> deleteUser(@ValidateToken String token) {
         return ResponseEntity.ok().body(userService.deleteUser(token));
     }
 
@@ -107,7 +109,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "이미 팔로잉 하셨습니다")
     })
     @PostMapping("/users/follow")
-    public ResponseEntity<UserResponse> addFollow(@RequestBody FollowRequest followRequest, @ValidateToken String token) {
+    public ResponseEntity<UserWithInfoResponse> addFollow(@RequestBody FollowRequest followRequest, @ValidateToken String token) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.addFollow(followRequest, token));
     }
 
@@ -119,7 +121,7 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "상대 유저의 아이디가 없습니다")
     })
     @DeleteMapping("/users/follow")
-    public ResponseEntity<UserResponse> deleteFollow(@RequestBody FollowRequest followRequest, @ValidateToken String token) {
+    public ResponseEntity<UserWithInfoResponse> deleteFollow(@RequestBody FollowRequest followRequest, @ValidateToken String token) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.deleteFollow(followRequest, token));
     }
 
@@ -139,7 +141,8 @@ public class UserController {
             @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
     })
     @GetMapping("/users/follow/following")
-    public ResponseEntity<Object> getFollowing(@ValidateToken String token) {
+    public ResponseEntity<?> getFollowing(@ValidateToken String token) {
         return ResponseEntity.ok().body(userService.getFollowing(token));
     }
+
 }

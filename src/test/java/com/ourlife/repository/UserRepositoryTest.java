@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -23,6 +24,12 @@ public class UserRepositoryTest {
 
     public User saveUser() {
         User user = Fixture.user();
+        userRepository.save(user);
+        return user;
+    }
+
+    public User saveUser1() {
+        User user = Fixture.user1();
         userRepository.save(user);
         return user;
     }
@@ -44,34 +51,56 @@ public class UserRepositoryTest {
 
 
     @Test
-    @DisplayName("이메일 기준으로 유저 정보 불러오기")
-    void findByEmail_True(){
+    @DisplayName("이메일 기준으로 유저 정보 불러오기_성공")
+    void findByEmail_True() {
         User savedUser = saveUser();
         String email = "test@test.com";
         // Fixture의 유저를 받아오면 어차피 같은 값이 아닐까...
         Optional<User> optionalUser = userRepository.findByEmail(email);
 
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             assertThat(optionalUser.get().getEmail()).isEqualTo(email);
-        }else{
+        } else {
             assertThat(optionalUser).isEmpty();
         }
 
     }
 
     @Test
-    @DisplayName("이메일 기준으로 유저 정보 불러오기")
-    void findByEmail_False(){
+    @DisplayName("이메일 기준으로 유저 정보 불러오기_실패")
+    void findByEmail_False() {
         User savedUser = saveUser();
         String email = "test@test.com";
         // Fixture의 유저를 받아오면 어차피 같은 값이 아닐까...
-        Optional<User> optionalUser = userRepository.findByEmail(email+".com");
+        Optional<User> optionalUser = userRepository.findByEmail(email + ".com");
 
-        if(optionalUser.isPresent()){
+        if (optionalUser.isPresent()) {
             assertThat(optionalUser.get().getEmail()).isEqualTo(email);
-        }else{
+        } else {
             assertThat(optionalUser).isEmpty();
         }
 
+    }
+
+    @Test
+    @DisplayName("문자열로 시작하는 닉네임 가져오기")
+    void findByNicknameStartingWith_true() {
+        User savadUser1 = saveUser();
+        User savedUser2 = saveUser1();
+
+        List<User> names = userRepository.findByNicknameStartingWith("te");
+
+        assertThat(names.get(0).getNickname()).isEqualTo(savadUser1.getNickname());
+        assertThat(names.get(1).getNickname()).isEqualTo(savedUser2.getNickname());
+    }
+
+    @Test
+    @DisplayName("문자열로 시작하는 닉네임 가져오기 (검색하는 닉네임이 없는 경우)")
+    void findByNicknameStartingWith_false() {
+        User savadUser1 = saveUser();
+
+        List<User> names = userRepository.findByNicknameStartingWith("hwan");
+
+        assertThat(names).isEmpty();
     }
 }

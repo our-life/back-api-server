@@ -23,5 +23,7 @@ public interface OurLifeService {
 
     public GetOurlifeLikeResponse getOurlifeLike(GetOurlifeRequest request, String token);
 
+    public List<GetOurlifeResponse> getMyOurlifes(String token);
+
 
 }

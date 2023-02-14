@@ -87,14 +87,7 @@ UserServiceImplTest {
         given(jwtTokenUtils.generateAccessToken(user)).willReturn(anyString());
 
         Assertions.assertDoesNotThrow(() -> userService.signin(Fixture.signinRequest()));
-/*
-        1. 유저가 저장 되어있어야 한다
-         2. Request 값이 들어옴
-         3. 이메일 기준으로 유저 값을 찾고
-         4. 입력값과 유저의 db password 맞는지 확인
-         5. token 이 null 아닌지 확인
-         이게 맞나...?
-         */
+
     }
     @Test
     @DisplayName("로그인 실패_비밀번호 다름")
@@ -171,7 +164,7 @@ UserServiceImplTest {
     void updateUser_fail_invalid_token() {
         given(jwtTokenUtils.validateToken(anyString())).willReturn(false);
 
-        Assertions.assertThrows(IllegalStateException.class,
+        Assertions.assertThrows(UserNotFoundException.class,
                 () -> userService.updateUser(Fixture.token(), Fixture.updateUserRequest()));
     }
 

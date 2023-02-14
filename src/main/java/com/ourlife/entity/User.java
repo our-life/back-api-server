@@ -12,21 +12,24 @@ import java.time.LocalDate;
 @Getter
 @Table(name = "users")
 @Entity
-public class User extends BaseEntity{
+public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long id;
 
+    @Column(name = "user_pw")
     private String password;
 
+    @Column(length = 40)
     private String nickname;
 
-    @Column(unique = true)
+    @Column(unique = true, length = 30)
     private String email;
 
+    @Column(length = 8)
     private String birth;
-
+    @Column(length = 18)
     private String introduce;
 
     private String profileImgUrl;

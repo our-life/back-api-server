@@ -12,14 +12,11 @@ import com.ourlife.repository.UserRepository;
 import com.ourlife.service.UserService;
 import com.ourlife.utils.Impl.BcryptPasswordEncoder;
 import com.ourlife.utils.Impl.JwtTokenUtils;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,18 +38,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse signup(User user) {
+    public UserWithInfoResponse signup(User user) {
         if (!validateDuplicationEmail(user.getEmail())) {
             throw new DuplicatedEmailException("이메일 중복 확인이 필요합니다.");
         }
 
         userRepository.save(user);
-        UserResponse response = UserResponse.response("성공");
-        return response;
+
+        return UserWithInfoResponse.response("성공", user);
     }
 
     @Override
-    public String signin(SigninRequest signinRequest) {
+    public Object[] signin(SigninRequest signinRequest) {
         User user = userRepository.findByEmail(signinRequest.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("이메일을 확인해주세요."));
 
@@ -60,7 +57,10 @@ public class UserServiceImpl implements UserService {
             throw new UserPasswordMissmatchException("비밀번호를 확인해주세요.");
         }
 
-        return jwtTokenUtils.generateAccessToken(user);
+        Object[] responses = new Object[2];
+        responses[0] =  jwtTokenUtils.generateAccessToken(user);
+        responses[1] = user;
+        return responses;
     }
 
     @Override
@@ -74,26 +74,26 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponse updateUser(String token, UpdateUserRequest request) {
+    public UserWithInfoResponse updateUser(String token, UpdateUserRequest request) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
 
         user.update(request);
-        UserResponse response = UserResponse.response("성공");
-        return response;
+
+        return UserWithInfoResponse.response("성공", user);
     }
 
     @Transactional
     @Override
-    public UserResponse deleteUser(String token) {
+    public UserWithInfoResponse deleteUser(String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("존재하지 않는 유저 입니다."));
 
         userRepository.delete(user);
 
-        return UserResponse.response("성공");
+        return UserWithInfoResponse.response("성공", user);
     }
     @Transactional
     @Override
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserResponse addFollow(FollowRequest followRequest, String token) {
+    public UserWithInfoResponse addFollow(FollowRequest followRequest, String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
 
         //toUserEmail 과  token userId (from)
@@ -128,6 +128,9 @@ public class UserServiceImpl implements UserService {
         User toUser = userRepository.findByEmail(followRequest.getToUserEmail())
                 .orElseThrow(() -> new UserNotFoundException("상대의 유저의 아이디가 없습니다."));
 
+        if(fromUser.getEmail().equals(toUser.getEmail())){
+            throw new FollowMissMatchException("본인을 팔로우 할 수 없습니다.");
+        }
 
         if (validateFollow(fromUser, toUser)) {
             throw new FollowMissMatchException("이미 팔로잉 하셨습니다");
@@ -136,8 +139,8 @@ public class UserServiceImpl implements UserService {
         Follow follow = Follow.createFollow(fromUser, toUser);
 
         followRepository.save(follow);
-        UserResponse response = UserResponse.response("성공");
-        return response;
+
+        return UserWithInfoResponse.response("성공", fromUser);
     }
     @Transactional
     @Override
@@ -145,19 +148,19 @@ public class UserServiceImpl implements UserService {
         boolean result = false;
         Optional<Follow> optionalFollow = followRepository.findByFromUserAndToUser(fromUser,toUser);
 
+        // 더 좋은 코드 고민 validateFollow
+        //Optional 쓴 김에 간결하게 짜면 좋을거 같은데
         if (optionalFollow.isPresent()) {
             Follow follow = optionalFollow.get();
             if (follow.getToUser() == toUser) {
                 result = true;
             }
         }
-        // 더 좋은 코드 고민 validateFollow
-        //Optional 쓴 김에 간결하게 짜면 좋을거 같은데
         return result;
     }
     @Transactional
     @Override
-    public UserResponse deleteFollow(FollowRequest followRequest, String token) {
+    public UserWithInfoResponse deleteFollow(FollowRequest followRequest, String token) {
         Long userId = jwtTokenUtils.parseUserIdFrom(token);
 
         //toUserEmail 과  token userId (from)
@@ -171,8 +174,8 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new FollowMissMatchException("팔로우하지 않았습니다."));
 
         followRepository.delete(follow);
-        UserResponse response = UserResponse.response("성공");
-        return response;
+
+        return UserWithInfoResponse.response("성공", fromUser);
     }
     @Transactional
     @Override
@@ -215,5 +218,7 @@ public class UserServiceImpl implements UserService {
         return getFollowings;
     }
         //필터, aop, 인터셉터, argument(추천)
+
+
 
 }

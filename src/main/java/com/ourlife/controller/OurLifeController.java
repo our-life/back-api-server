@@ -28,7 +28,7 @@ public class OurLifeController {
             @ApiResponse(responseCode = "400", description = "유효하지 않은 토큰"),
     })
     @GetMapping("/ourlifes/lists")
-    public ResponseEntity<?> getOurlifes(@ValidateToken String token) {
+    public ResponseEntity<List<GetOurlifeResponse>> getOurlifes(@ValidateToken String token) {
         return ResponseEntity.ok().body(ourLifeService.getOurlifes(token));
     }
 
@@ -41,6 +41,11 @@ public class OurLifeController {
     public ResponseEntity<?> getOurlife(@RequestBody GetOurlifeRequest request,
                                         @ValidateToken String token){
         return ResponseEntity.ok().body(ourLifeService.getOurlife(request, token));
+    }
+
+    @GetMapping("/ourlifes/mylifes")
+    public ResponseEntity<?> getMyOurlifes(@ValidateToken String token){
+        return ResponseEntity.ok().body(ourLifeService.getMyOurlifes(token));
     }
 
     @Operation(summary = "글쓰기 ", description = "글쓰기 입니다.")
